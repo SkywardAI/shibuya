@@ -1,0 +1,57 @@
+* {
+    font-family: ui-sans-serif,system-ui,sans-serif,"Apple Color Emoji","Segoe UI Emoji",Segoe UI Symbol,"Noto Color Emoji";
+    box-sizing: border-box;
+
+    --sidebar-width: 60px;
+    --window-width: calc(100% - var(--sidebar-width));
+    --normal-bg-color: rgb(240, 242, 245);
+    --change-bg-color: rgba(0, 0, 0, .07);
+    --section-bg-color: rgb(255, 255, 255);
+    --change-section-bg-color: rgb(245, 246, 246);
+}
+
+*::-webkit-scrollbar { background-color: transparent; width: 15px; }
+*::-webkit-scrollbar-track { background-color: transparent; }
+*::-webkit-scrollbar-thumb { 
+    border-radius: 10px;
+    background-color: rgba(230, 230, 230, 0.4);
+    width: 6px;
+    border: 4px solid transparent;
+    background-clip: content-box;
+}
+*::-webkit-scrollbar-thumb:hover { background-color: rgba(230, 230, 230, 0.7); }
+
+.clickable:hover {
+    cursor: pointer;
+}
+
+.main {
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    overflow: hidden;
+    left: 0;
+    top: 0;
+}
+
+.main > * {
+    background-color: var(--normal-bg-color);
+}
+
+.app-sidebar {
+    width: var(--sidebar-width);
+    height: 100%;
+    position: fixed;
+    left: 0;
+    top: 0;
+    border-right: 1px solid lightgray;
+}
+
+.window {
+    width: var(--window-width);
+    height: 100%;
+    position: fixed;
+    overflow-y: auto;
+    right: 0;
+    top: 0;
+}
