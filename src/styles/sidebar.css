@@ -1,0 +1,33 @@
+.app-sidebar > .section {
+    width: 100%;
+    height: fit-content;
+    position: absolute;
+    top: 0;
+}
+.app-sidebar > .section.bottom {
+    top: unset;
+    bottom: 0;
+
+}
+.app-sidebar > .section > .item {
+    --leave-blank: 7px;
+    --icon-size: calc(var(--sidebar-width) - (var(--leave-blank) * 2));
+    width: var(--icon-size);
+    height: var(--icon-size);
+    border-radius: 30px;
+    margin: 7px auto;
+    display: flex;
+    align-items: center;
+    position: relative;
+    transition-duration: .3s;
+}
+.app-sidebar > .section > .item.selected,
+.app-sidebar > .section > .item:hover {
+    background-color: var(--change-bg-color);
+}
+.app-sidebar > .section > .item > .icon {
+    color: gray;
+    width: 50%;
+    height: 50%;
+    margin: auto;
+}
