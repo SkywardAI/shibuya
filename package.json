@@ -1,0 +1,42 @@
+{
+  "name": "shibuya",
+  "version": "0.1.0",
+  "dependencies": {
+    "react": "^18.3.1",
+    "react-bootstrap-icons": "^1.11.4",
+    "react-dom": "^18.3.1",
+    "react-router-dom": "^6.26.0",
+    "react-scripts": "5.0.1",
+    "web-vitals": "^2.1.4"
+  },
+  "main": "electron.js",
+  "scripts": {
+    "dev": "node backend/index.js & npm run start & npm run electron",
+    "electron": "electron .",
+    "start": "BROWSER=none react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "electron": "^32.0.0"
+  }
+}
