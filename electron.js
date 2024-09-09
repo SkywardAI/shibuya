@@ -1,4 +1,4 @@
-const { app, BrowserWindow } = require('electron');
+import { app, BrowserWindow } from 'electron';
 
 function createWindow() {
     const win = new BrowserWindow({
@@ -20,6 +20,7 @@ app.whenReady().then(() => {
     createWindow();
 
     app.on('window-all-closed', () => {
+        // eslint-disable-next-line
         process.platform !== 'darwin' && app.quit()
     });
 
