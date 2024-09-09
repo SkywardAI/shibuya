@@ -1,5 +1,3 @@
-import React from "react";
-
 export default function Ticket({ title, uid, selectChat, is_selected }) {
     return (
         <div 

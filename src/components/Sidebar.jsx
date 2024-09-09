@@ -1,4 +1,3 @@
-import React from "react";
 import { Link, Outlet, useLocation } from "react-router-dom";
 import { sidebar_top_menus, sidebar_bottom_menus } from "../utils/types";
 

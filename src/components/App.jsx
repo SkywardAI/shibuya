@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { createBrowserRouter, Navigate, RouterProvider,  } from "react-router-dom";
 import Sidebar from "./Sidebar";
 import Chat from "./chat";

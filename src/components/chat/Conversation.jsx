@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import ConversationBubble from "./ConversationBubble";
 import { Send } from 'react-bootstrap-icons';
 

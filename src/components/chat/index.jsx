@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import Tickets from "./Tickets";
 import Conversation from "./Conversation";
 

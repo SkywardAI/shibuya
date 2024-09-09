@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import Ticket from "./Ticket";
 
 export default function Tickets({selectChat, current_chat}) {
