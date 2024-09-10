@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { createBrowserRouter, Navigate, RouterProvider,  } from "react-router-dom";
-import Sidebar from "./Sidebar";
+import Sidebar from "./sidebar";
 import Chat from "./chat";
 import Settings from "./Settings";
 

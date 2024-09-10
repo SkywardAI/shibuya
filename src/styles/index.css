@@ -24,6 +24,7 @@
 .clickable:hover {
     cursor: pointer;
 }
+.hidden { display: none; }
 
 .main {
     width: 100%;
