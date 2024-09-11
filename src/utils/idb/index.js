@@ -10,9 +10,9 @@ const defaultOptions = {
 }
 
 class IDB {
-    constructor() {
-        this.initDB();
-    }
+    // constructor() {
+    //     this.initDB();
+    // }
 
     /**
      * Init database so that we can interact with it
