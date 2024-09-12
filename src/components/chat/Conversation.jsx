@@ -64,6 +64,9 @@ export default function Conversation({ uid }) {
                         content: text,
                         createdAt: Date.now()
                     })
+                    idb.updateOne(
+                        'chat-history', {updatedAt: Date.now()}, [{uid}]
+                    )
                     setHidePending(true);
                 }
             }
