@@ -101,10 +101,9 @@ export async function chatCompletions(messages, cb = null) {
     try {
         const prompt = await formatPrompt(messages)
         const result = await engines['completion'].instance.createCompletion(prompt, {
-            nPredict: 128,
+            nPredict: 256,
             sampling: {
-                temp: 0.7,
-                top_p: 0.9
+                temp: 0.7
             },
             onNewToken: (token, piece, currentText, optionals) => {
                 cb && cb(currentText, false);

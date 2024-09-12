@@ -9,7 +9,9 @@ export default function Tickets({selectChat, current_chat}) {
     const idb = useIDB();
 
     async function syncHistory() {
-        setTickets(await idb.getAll('chat-history'))
+        const history = await idb.getAll('chat-history')
+        history.sort((a, b)=>b.updatedAt - a.updatedAt)
+        setTickets(history)
     }
 
     async function startNewConversation() {
@@ -22,7 +24,7 @@ export default function Tickets({selectChat, current_chat}) {
                 uid: genRandomID()
             }
         )
-        const new_conv_info = await idb.getById('chat-history', conv_id);
+        const new_conv_info = await idb.getByID('chat-history', conv_id);
         new_conv_info &&
         setTickets([
             ...tickets,

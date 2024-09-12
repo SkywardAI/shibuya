@@ -1,4 +1,4 @@
-export const DEFAULT_TABLE_SETTINGS = { keyPath: 'id', autoIncrement: true }
+export const DEFAULT_TABLE_SETTINGS = { autoIncrement: true }
 
 export const DB_NAME = 'shibuya-idb'
 
