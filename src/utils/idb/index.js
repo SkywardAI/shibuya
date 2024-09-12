@@ -96,7 +96,7 @@ class IDB {
                                         resolved = true;
                                     }; return;
                                 case "update-one":
-                                    cursor.update(value).onsuccess = () => {
+                                    cursor.update({...cursor.value, ...value}).onsuccess = () => {
                                         resolve(true);
                                         resolved = true;
                                     }; return;
@@ -107,7 +107,7 @@ class IDB {
                                     };
                                     cursor.continue(); return;
                                 case 'update-all':
-                                    cursor.update(value).onerror = () => {
+                                    cursor.update({...cursor.value, ...value}).onerror = () => {
                                         resolve(false);
                                         resolved = true;
                                     };
@@ -214,7 +214,7 @@ class IDB {
      * @param {String[]|null} select list of keys to be selected
      * @returns {Promise<Object>}
      */
-    getById(table, id, select = null) {
+    getByID(table, id, select = null) {
         return new Promise(resolve=>{
             const req = this._getTable(table, 'readonly').get(id);
             req.onsuccess = () => resolve(formatSelect(select, req.result));
@@ -242,9 +242,11 @@ class IDB {
         })
     }
 
-    updateByID(table, id, column) {
+    async updateByID(table, id, column) {
+        const record = await this.getByID(table, id);
+        if(!record) return false;
         return new Promise(resolve=>{
-            const req = this._getTable(table, 'readwrite').put(column, id);
+            const req = this._getTable(table, 'readwrite').put({...record, ...column}, id);
             req.onsuccess = () => resolve(true);
             req.onerror = () => resolve(false);
         })
