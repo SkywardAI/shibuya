@@ -1,0 +1,80 @@
+.load-page > .loading {
+    width: 100%;
+    user-select: none;
+    text-align: center;
+    color: gray;
+    margin-top: 20px;
+}
+
+.load-page > .first-time {
+    width: 100%;
+    padding: 60px 40px;
+    text-align: center;
+}
+
+.load-page > .first-time > .title {
+    font-size: 30px;
+    color: gray;
+}
+
+.load-page > .first-time > .description {
+    font-size: 18px;
+    color: gray;
+    margin-top: 20px;
+    line-height: 25px;
+}
+
+.load-page > .first-time > .download-model {
+    width: 270px;
+    height: 40px;
+    border-radius: 10px;
+    align-content: center;
+    margin: auto;
+    background-color: rgb(150, 150, 150);
+    margin-top: 20px;
+    color: white;
+    user-select: none;
+    font-size: 20px;
+    transition-duration: .3s;
+}
+.load-page > .first-time > .download-model:hover {
+    background-color: gray;
+}
+
+.load-page > .first-time > .skip {
+    width: fit-content;
+    margin: auto;
+    margin-top: 10px;
+    text-decoration: underline;
+    color: gray;
+}
+
+.load-page > .first-time > .download-progress {
+    margin: auto;
+    margin-top: 20px;
+    width: 500px;
+    background-color: lightgray;
+    border-radius: 20px;
+    height: 20px;
+    align-content: center;
+    font-size: 12px;
+    color: white;
+    position: relative;
+    overflow: hidden;
+}
+
+.load-page > .first-time > .download-progress > .progress-bar {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background-color: limegreen;
+    transform: translateX(-100%);
+    z-index: 1;
+}
+
+.load-page > .first-time > .download-progress > .progress-num {
+    z-index: 2;
+    position: relative;
+}
