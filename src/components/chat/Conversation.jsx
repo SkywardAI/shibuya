@@ -2,7 +2,8 @@ import { useEffect, useRef, useState } from "react";
 import ConversationBubble from "./ConversationBubble";
 import { Send, StopCircleFill } from 'react-bootstrap-icons';
 import useIDB from "../../utils/idb";
-import { abortCompletion, chatCompletions, isModelLoaded, loadModel } from '../../utils/worker'
+import { isModelLoaded, loadModel } from '../../utils/workers/worker'
+import { getCompletionFunctions } from "../../utils/workers";
 
 export default function Conversation({ uid }) {
 
@@ -10,6 +11,7 @@ export default function Conversation({ uid }) {
     const [message, setMessage] = useState('');
     const [pending_message, setPendingMessage] = useState('');
     const [hide_pending, setHidePending] = useState(true);
+    const chat_functions = useRef(getCompletionFunctions());
     const idb = useIDB();
 
     const bubblesRef = useRef();
@@ -45,32 +47,40 @@ export default function Conversation({ uid }) {
         setMessage('');
         setHidePending(false);
 
-        if(!isModelLoaded()) {
-            await loadModel();
-        }
-        await chatCompletions([user_msg], 
-            (text, isFinished) => {
-                if(!isFinished) {
-                    setPendingMessage(text);
-                } else {
-                    setPendingMessage('');
-                    setConversation([
-                        ...conversation, user_msg,
-                        { role: 'assistant', content: text }
-                    ])
-                    idb.insert('messages', {
-                        'history-uid': uid,
-                        role: 'assistant',
-                        content: text,
-                        createdAt: Date.now()
-                    })
-                    idb.updateOne(
-                        'chat-history', {updatedAt: Date.now()}, [{uid}]
-                    )
-                    setHidePending(true);
-                }
+        function cb(text, isFinished) {
+            if(!isFinished) {
+                setPendingMessage(text);
+            } else {
+                setPendingMessage('');
+                setConversation([
+                    ...conversation, user_msg,
+                    { role: 'assistant', content: text }
+                ])
+                idb.insert('messages', {
+                    'history-uid': uid,
+                    role: 'assistant',
+                    content: text,
+                    createdAt: Date.now()
+                })
+                idb.updateOne(
+                    'chat-history', {updatedAt: Date.now()}, [{uid}]
+                )
+                setHidePending(true);
             }
-        )
+        }
+
+        if(chat_functions.current.type === "Wllama") {
+            if(!isModelLoaded()) {
+                await loadModel();
+            }
+        }
+        const result = await chat_functions.current.completions([user_msg], cb);
+        if(!result) {
+            setPendingMessage('');
+            setHidePending(true);
+        } else {
+            console.log(result)
+        }
     }
     
     useEffect(()=>{
@@ -110,7 +120,7 @@ export default function Conversation({ uid }) {
                             { 
                                 hide_pending ? 
                                 <Send className="button-icon" /> :
-                                <StopCircleFill className="button-icon stop clickable" onClick={abortCompletion} />
+                                <StopCircleFill className="button-icon stop clickable" onClick={chat_functions.current.abort} />
                             }
                             <input type='submit' className={`clickable${!hide_pending?" disabled":''}`}/>
                         </div>
