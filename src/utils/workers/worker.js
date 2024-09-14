@@ -115,9 +115,8 @@ export async function chatCompletions(messages, cb = null) {
         return result;
     } catch(error) {
         console.error(error)
-        // await ReloadEngine();
-        // await chatCompletions(messages, cb);
-        return;
+        cb && cb(`**${error.name}**:\n\`\`\`\n${error.message}\n\`\`\``, true);
+        return null;
     }
 }
 
