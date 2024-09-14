@@ -25,6 +25,7 @@
     cursor: pointer;
 }
 .hidden { display: none; }
+input:focus { outline: none; }
 
 .main {
     width: 100%;
