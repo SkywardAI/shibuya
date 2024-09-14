@@ -2,7 +2,7 @@ import { useState } from "react";
 import { createBrowserRouter, Navigate, RouterProvider,  } from "react-router-dom";
 import Sidebar from "./sidebar";
 import Chat from "./chat";
-import Settings from "./Settings";
+import Settings from "./settings";
 import Entry from "./Entry";
 
 export default function App() {

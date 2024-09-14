@@ -6,6 +6,7 @@ import './styles/index.css';
 import './styles/sidebar.css';
 import './styles/chat.css';
 import './styles/entry.css';
+import './styles/settings.css';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(

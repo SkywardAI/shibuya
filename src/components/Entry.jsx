@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import useIDB from '../utils/idb'
-import { downloadModel, isModelDownloaded, loadModel } from '../utils/worker'
+import { downloadModel, isModelDownloaded, loadModel } from '../utils/workers/worker'
+import { getPlatformSettings } from '../utils/platform_settings';
 
 export default function Entry({complete}) {
 
@@ -10,6 +11,7 @@ export default function Entry({complete}) {
 
     async function firstTimeSetup() {
         if(!(await isModelDownloaded())) {
+            setProgress(0);
             await downloadModel('completion', (progress)=>{
                 setProgress(progress);
             })
@@ -20,7 +22,11 @@ export default function Entry({complete}) {
 
     async function startUp() {
         await idb.initDB();
-        loadStep !== 3 && await loadModel();
+        if(
+            loadStep !== 3 && 
+            !getPlatformSettings().enabled_platform
+        ) await loadModel();
+
         complete();
     }
 
@@ -53,7 +59,7 @@ export default function Entry({complete}) {
                         download_progress < 0 ?
                         <>
                         <div className="download-model clickable" onClick={firstTimeSetup}>Set Me Up Now!</div>
-                        <div className="skip clickable" onClick={()=>setLoadStep(2)}>Skip for now</div>
+                        <div className="skip clickable" onClick={()=>setLoadStep(3)}>Skip for now</div>
                         </> :
                         <div className='download-progress'>
                             <div className='progress-bar' style={{transform: `translateX(-${100-download_progress}%)`}}></div>
