@@ -10,9 +10,16 @@ const defaultOptions = {
 }
 
 class IDB {
-    // constructor() {
-    //     this.initDB();
-    // }
+    constructor() {
+        this.table_key_format = {};
+
+        versions.forEach(tables=>{
+            for(const name in tables) {
+                const {init} = tables[name];
+                this.table_key_format[name] = init && init.keyPath ? 'inline' : 'outline';
+            }
+        })
+    }
 
     /**
      * Init database so that we can interact with it
@@ -20,7 +27,7 @@ class IDB {
      */
     initDB() {
         return new Promise(resolve=>{
-            const latest = Math.max(versions.map(e=>e.version));
+            const latest = versions.length;
             const req = window.indexedDB.open(DB_NAME, latest);
     
             req.onsuccess = () => {
@@ -35,7 +42,8 @@ class IDB {
             req.onupgradeneeded = (ev) => {
                 const dbVersion = req.result;
                 const {oldVersion} = ev;
-                versions.forEach(({version, tables})=>{
+                versions.forEach((tables, index)=>{
+                    const version = index+1
                     if(oldVersion >= version) return;
     
                     for(const name in tables) {
@@ -222,9 +230,16 @@ class IDB {
         })
     }
 
-    insert(table, column) {
+    insert(table, column, id = null) {
         return new Promise(resolve=>{
-            const req = this._getTable(table, 'readwrite').add(column);
+            const tbl = this._getTable(table, 'readwrite')
+            let req;
+            if(this.table_key_format[table] === 'inline' || !id) {
+                if(id) column = {...column, [tbl.keyPath]: id}
+                req = tbl.add(column)
+            } else {
+                req = tbl.add(column, id)
+            }
             req.onsuccess = () => resolve(req.result);
             req.onerror = () => resolve(null);
         })
@@ -242,12 +257,22 @@ class IDB {
         })
     }
 
-    async updateByID(table, id, column) {
+    async updateByID(table, id, column, no_auto_insert = false) {
         const record = await this.getByID(table, id);
-        if(!record) return false;
+        if(!record && no_auto_insert) return false;
         return new Promise(resolve=>{
-            const req = this._getTable(table, 'readwrite').put({...record, ...column}, id);
-            req.onsuccess = () => resolve(true);
+            const tbl = this._getTable(table, 'readwrite');
+            let req;
+            if(this.table_key_format[table] === 'inline') {
+                if(!record) {
+                    req = tbl.put({...column, [tbl.keyPath]: id})
+                } else {
+                    req = tbl.put({...record, ...column});
+                }
+            } else {
+                req = tbl.put({...(record || {}), ...column}, id);
+            }
+            req.onsuccess = () => resolve(req.result);
             req.onerror = () => resolve(false);
         })
     }
@@ -286,7 +311,7 @@ class IDB {
     }
 }
 
-const instance = new IDB();
+export const instance = new IDB();
 
 export default function useIDB() {
     const [idb, setIDB] = useState(instance);
