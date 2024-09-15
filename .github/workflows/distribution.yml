@@ -5,13 +5,14 @@ on:
     types: [published]
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
-
+  release-build:
+  
     strategy:
       matrix:
         os: [macos-latest, ubuntu-latest, windows-latest]
-
+        
+    runs-on: ${{ matrix.os }}
+    
     steps:
       - uses: actions/checkout@v4
 
@@ -37,6 +38,6 @@ jobs:
         run: pnpm run build-electron
       
       - name: Publish to release
+        run: gh release ${{github.event.release.tag_name}} upload dist-electron/SkywardaiChat-*
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: gh release upload dist-electron/SkywardaiChat-*
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
