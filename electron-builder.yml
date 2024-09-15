@@ -13,6 +13,7 @@ files:
 win:
   target:
     - nsis  # Windows installer type, you can use zip, nsis, etc.
+  oneClick: false
 
 mac:
   target:
