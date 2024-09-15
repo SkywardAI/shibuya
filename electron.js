@@ -1,4 +1,9 @@
-import { app, BrowserWindow } from 'electron';
+// eslint-disable-next-line
+const { app, Menu, BrowserWindow } = require('electron');
+// eslint-disable-next-line
+const path = require('path');
+
+app.commandLine.appendSwitch('enable-features','SharedArrayBuffer')
 
 function createWindow() {
     const win = new BrowserWindow({
@@ -7,10 +12,17 @@ function createWindow() {
         width: 900,
         minWidth: 560,
         minHeight: 250,
-        autoHideMenuBar: true
+        // autoHideMenuBar: true,
     })
 
-    win.loadURL("http://localhost:3000");
+    if(app.isPackaged) {
+        // eslint-disable-next-line
+        win.loadFile(path.join(__dirname, 'dist/index.html'))
+        Menu.setApplicationMenu(null);
+    } else {
+        win.loadURL("http://localhost:3000");
+    }
+
     win.once("ready-to-show", ()=>{
         win.show();
     })

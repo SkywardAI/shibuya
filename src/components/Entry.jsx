@@ -16,15 +16,16 @@ export default function Entry({complete}) {
                 setProgress(progress);
             })
         }
-        localStorage.setItem('not-first-time', '1');
         setLoadStep(2);
     }
 
     async function startUp() {
+        localStorage.setItem('not-first-time', '1');
         await idb.initDB();
         if(
             loadStep !== 3 && 
-            !getPlatformSettings().enabled_platform
+            !getPlatformSettings().enabled_platform &&
+            await isModelDownloaded()
         ) await loadModel();
 
         complete();
