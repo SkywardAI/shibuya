@@ -4,13 +4,13 @@
       "name": "Bohan Cheng",
       "email": "cbh778899@outlook.com"
   },
-  "version": "0.1.0",
+  "version": "0.1.9",
   "main": "electron.js",
   "scripts": {
     "dev": "npm run start & npm run electron",
     "start": "vite",
     "build": "vite build",
-    "build-electron": "electron-builder -c",
+    "build-electron": "electron-builder -p always -c",
     "lint": "eslint .",
     "preview": "vite preview",
     "electron": "electron ."
