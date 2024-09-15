@@ -142,7 +142,8 @@
     position: absolute;
     bottom: 0;
     left: 0;
-    display: block;
+    display: flex;
+    align-items: center;
     overflow: hidden;
     background-color: var(--normal-bg-color);
 }
@@ -186,41 +187,62 @@
     animation-delay: .8s;
 }
 
-.chat > .conversation-main > .send-message-form >
-input[type="text"] {
+.chat > .conversation-main > .send-message-form > .input-container {
     width: calc(100% - 20px);
-    margin-left: 10px;
-    margin-top: 10px;
-    position: relative;
     height: var(--elem-size);
-    border: 1px solid lightgray;
+    position: relative;
+    margin: auto;
+    border: 2px solid lightgray;
+    overflow: hidden;
     border-radius: 30px;
+}
+
+.chat > .conversation-main > .send-message-form > .input-container >
+input[type="text"] {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    border: none;
     padding: 0px var(--elem-size) 0px 10px;
 }
 
-.chat > .conversation-main > .send-message-form >
+.chat > .conversation-main > .send-message-form > .input-container >
 input[type="text"]:focus {
     outline: none;
 }
 
 
-.chat > .conversation-main > .send-message-form >
-.send-message-button-container {
+.chat > .conversation-main > .send-message-form > .input-container >
+.button-container {
     position: absolute;
     width: var(--elem-size);
     height: var(--elem-size);
-    right: 10px;
-    top: 10px;
+    right: 0;
+    top: 0;
     display: flex;
+    z-index: 1;
+    background-color: rgba(230, 230, 230, 0.6);
+}
+.chat > .conversation-main > .send-message-form > .input-container >
+.button-container.file-upload {
+    right: unset;
+    left: 0;
 }
 
-.chat > .conversation-main > .send-message-form >
-.send-message-button-container:hover > .button-icon:not(.stop) {
+.chat > .conversation-main > 
+.send-message-form > .input-container:has(>.button-container.file-upload) >
+input[type="text"] {
+    padding-left: calc(5px + var(--elem-size));
+}
+
+
+.chat > .conversation-main > .send-message-form > .input-container >
+.button-container:hover > .button-icon.animated {
     transform: rotate(45deg);
 }
 
-.chat > .conversation-main > .send-message-form >
-.send-message-button-container > input[type="submit"]{
+.chat > .conversation-main > .send-message-form > .input-container >
+.button-container > input{
     width: 100%;
     height: 100%;
     position: absolute;
@@ -229,17 +251,22 @@ input[type="text"]:focus {
     z-index: 2;
     opacity: 0;
 }
-.chat > .conversation-main > .send-message-form >
-.send-message-button-container > input[type="submit"].disabled {
+.chat > .conversation-main > .send-message-form > .input-container >
+.button-container > input.disabled {
     pointer-events: none;
 }
 
-.chat > .conversation-main > .send-message-form >
-.send-message-button-container > .button-icon {
+.chat > .conversation-main > .send-message-form > .input-container >
+.button-container > .button-icon {
     --size: 40%;
     width: var(--size);
     height: var(--size);
     margin: auto;
     color: rgb(90, 90, 90);
     transition-duration: .3s;
+}
+
+.chat > .conversation-main > .send-message-form > .input-container >
+.button-container > .button-icon.highlight {
+    color: dodgerblue;
 }

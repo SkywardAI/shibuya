@@ -64,11 +64,16 @@ export async function deleteModel(type = 'completion') {
     await instance.cacheManager.delete(cacheKey);
 }
 
-export async function loadModel(type = 'completion') {
+export async function loadModel(type = 'completion', cb = null) {
     // check if model already in cache
     const { instance, model_src } = engines[type];
     
     try {
+        // if not downloaded, download first
+        if(!await isModelDownloaded(type)) {
+            await downloadModel(type, cb);
+        }
+        cb && cb('loading')
         await instance.loadModelFromUrl(model_src, {
             n_threads: 6,
             n_ctx: 4096,
