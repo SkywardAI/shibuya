@@ -37,8 +37,10 @@ jobs:
 
       - name: Build Electron app
         run: pnpm run build-electron
-      
-      - name: Publish to release
-        run: gh release upload ${{github.event.release.tag_name}} dist-electron/SkywardaiChat-*
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      
+      # - name: Publish to release
+      #   run: gh release upload ${{github.event.release.tag_name}} dist-electron/SkywardaiChat-*
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
