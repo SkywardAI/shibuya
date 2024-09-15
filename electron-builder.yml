@@ -13,7 +13,6 @@ files:
 win:
   target:
     - nsis  # Windows installer type, you can use zip, nsis, etc.
-  oneClick: false
 
 mac:
   target:
@@ -25,7 +24,7 @@ linux:
     # - deb  # You can also specify 'deb', 'rpm', etc.
 
 nsis:
-  oneClick: true  # Whether the installer is one-click
+  oneClick: false  # Whether the installer is one-click
   allowElevation: true  # Allow requests for elevation (admin privileges)
   allowToChangeInstallationDirectory: true  # Let the user change the install directory
   createDesktopShortcut: true  # Create desktop shortcut after installation
