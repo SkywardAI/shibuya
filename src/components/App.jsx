@@ -1,31 +1,15 @@
 import { useState } from "react";
-import { createBrowserRouter, Navigate, RouterProvider,  } from "react-router-dom";
-import Sidebar from "./sidebar";
-import Chat from "./chat";
-import Settings from "./settings";
+import { createBrowserRouter, RouterProvider,  } from "react-router-dom";
 import Entry from "./Entry";
+import router_settings from "../utils/router";
+import { createHashRouter } from "react-router-dom";
 
 export default function App() {
-    const router = useState(createBrowserRouter([
-        {
-            path: "/",
-            element: <Sidebar />,
-            children: [
-                {
-                    path: "/",
-                    element: <Navigate to='/chat' />
-                },
-                {
-                    path: "chat",
-                    element: <Chat />
-                },
-                {
-                    path: "settings",
-                    element: <Settings />
-                }
-            ]
-        },
-    ]))[0];
+    const router = useState(
+        import.meta.env.MODE === 'production' ?
+        createHashRouter(router_settings) :
+        createBrowserRouter(router_settings)
+    )[0];
     const [warmup, setWarmUp] = useState(false);
 
     return warmup ? <RouterProvider router={router} /> : <Entry complete={()=>setWarmUp(true)} />
