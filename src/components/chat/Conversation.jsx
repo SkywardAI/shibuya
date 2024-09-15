@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import ConversationBubble from "./ConversationBubble";
-import { Send, StopCircleFill } from 'react-bootstrap-icons';
+import { FileImageFill, FileTextFill, Paperclip, Send, StopCircleFill } from 'react-bootstrap-icons';
 import useIDB from "../../utils/idb";
 import { isModelLoaded, loadModel } from '../../utils/workers/worker'
 import { getCompletionFunctions } from "../../utils/workers";
@@ -11,6 +11,7 @@ export default function Conversation({ uid }) {
     const [message, setMessage] = useState('');
     const [pending_message, setPendingMessage] = useState('');
     const [hide_pending, setHidePending] = useState(true);
+    const [upload_file, setUploadFile] = useState(null);
     const chat_functions = useRef(getCompletionFunctions());
     const idb = useIDB();
 
@@ -45,7 +46,6 @@ export default function Conversation({ uid }) {
         const user_msg = {role: 'user', content: message}
         setConversation([...conversation, user_msg])
         setMessage('');
-        setHidePending(false);
 
         function cb(text, isFinished) {
             if(!isFinished) {
@@ -69,12 +69,41 @@ export default function Conversation({ uid }) {
             }
         }
 
-        if(chat_functions.current.type === "Wllama") {
+        let messages = [];
+        setHidePending(false);
+
+        if(chat_functions.current.platform === "Wllama") {
             if(!isModelLoaded()) {
-                await loadModel();
+                await loadModel('completion', (progress)=>{
+                    setPendingMessage(
+                        typeof progress === 'number' ?
+                        `**Downloading model, ${progress}% completed**` :
+                        '**Loading model...**'
+                    )
+                });
+                setPendingMessage('')
             }
+            messages = [user_msg];
+        } else {
+            let user_message = user_msg;
+            if(upload_file) {
+                const is_img = upload_file.type.startsWith('image')
+                const file_obj = {
+                    content: new Uint8Array(await upload_file.arrayBuffer())
+                }
+                if(!is_img) file_obj.name = upload_file.name;
+                user_message[
+                    is_img ? 'image' : 'document'
+                ] = file_obj;
+                setUploadFile(null);
+            }
+            messages = [
+                ...conversation,
+                user_message
+            ]
         }
-        const result = await chat_functions.current.completions([user_msg], cb);
+
+        const result = await chat_functions.current.completions(messages, cb);
         if(!result) {
             setPendingMessage('');
             setHidePending(true);
@@ -85,6 +114,7 @@ export default function Conversation({ uid }) {
     
     useEffect(()=>{
         uid && getConversationByUid();
+        setUploadFile(null);
     // eslint-disable-next-line
     }, [uid]);
 
@@ -115,14 +145,31 @@ export default function Conversation({ uid }) {
                         />
                     </div>
                     <form className="send-message-form" onSubmit={sendMessage}>
-                        <input type="text" value={message} onChange={messageOnChange}/>
-                        <div className="send-message-button-container">
-                            { 
-                                hide_pending ? 
-                                <Send className="button-icon" /> :
-                                <StopCircleFill className="button-icon stop clickable" onClick={chat_functions.current.abort} />
+                        <div className="input-container">
+                            {
+                                chat_functions.current && chat_functions.current.platform !== 'Wllama' &&
+                                <div className="button-container file-upload">
+                                    {
+                                        upload_file ? 
+                                        upload_file.type.startsWith("image") ? 
+                                        <FileImageFill className="button-icon highlight" /> : <FileTextFill className="button-icon highlight" />:
+                                        <Paperclip className="button-icon" />
+                                    }
+                                    <input 
+                                        type="file" className="clickable" 
+                                        title={upload_file ? `Append file ${upload_file.name}` : "Select file to append"}
+                                        onChange={evt=>setUploadFile(evt.target.files.length ? evt.target.files[0] : null)} />
+                                </div>
                             }
-                            <input type='submit' className={`clickable${!hide_pending?" disabled":''}`}/>
+                            <input type="text" value={message} onChange={messageOnChange}/>
+                            <div className="button-container">
+                                { 
+                                    hide_pending ? 
+                                    <Send className="button-icon animated" /> :
+                                    <StopCircleFill className="button-icon clickable" onClick={chat_functions.current.abort} />
+                                }
+                                <input type='submit' className={`clickable${!hide_pending?" disabled":''}`}/>
+                            </div>
                         </div>
                     </form>
                 </> :

@@ -6,7 +6,7 @@ import { chatCompletions as AwsCompletions, abortCompletion as AwsAbort } from "
  * @typedef CompletionFunctions
  * @property {Function} completions
  * @property {Function} abort
- * @property {"Wllama" | "AWS"} type
+ * @property {"Wllama" | "AWS"} platform
  */
 
 /**
@@ -18,9 +18,9 @@ export function getCompletionFunctions() {
     
     switch(platform_settings.enabled_platform ) {
         case 'AWS':
-            return { completions: AwsCompletions, abort: AwsAbort, type: "AWS" }
+            return { completions: AwsCompletions, abort: AwsAbort, platform: "AWS" }
         default:
-            return { completions: WllamaCompletions, abort: WllamaAbort, type: "Wllama" }
+            return { completions: WllamaCompletions, abort: WllamaAbort, platform: "Wllama" }
     }
     
 }

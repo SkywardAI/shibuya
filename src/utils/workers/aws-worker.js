@@ -50,7 +50,7 @@ let abort_signal = false;
 /**
  * @typedef ImageMessage
  * @property {"png" | "jpeg" | "gif" | "webp"} format Format of image
- * @property {Buffer} content Content in bytes
+ * @property {Uint8Array} content Content in bytes
  */
 
 /**
@@ -95,7 +95,11 @@ let abort_signal = false;
  */
 export async function chatCompletions(messages, cb = null) {
     const { aws_model_id } = getPlatformSettings();
-    if(!aws_model_id || (!bedrock_client && !await initBedrockClient())) return null;
+    if(!aws_model_id || (!bedrock_client && !await initBedrockClient())) {
+        console.log('no bedrock')
+        cb && cb("**Cannot Initialize AWS Bedrock Client**", true)
+        return null;
+    }
 
     const system = [];
     const normal_messages = [];
