@@ -1,13 +1,16 @@
 {
-  "name": "vite-test",
-  "private": true,
-  "version": "0.0.0",
-  "type": "module",
+  "name": "shibuya",
+  "author": {
+      "name": "Bohan Cheng",
+      "email": "cbh778899@outlook.com"
+  },
+  "version": "0.1.0",
   "main": "electron.js",
   "scripts": {
     "dev": "npm run start & npm run electron",
     "start": "vite",
     "build": "vite build",
+    "build-electron": "electron-builder -c",
     "lint": "eslint .",
     "preview": "vite preview",
     "electron": "electron ."
@@ -29,6 +32,7 @@
     "@types/react-dom": "^18.3.0",
     "@vitejs/plugin-react": "^4.3.1",
     "electron": "^32.0.0",
+    "electron-builder": "^25.0.5",
     "eslint": "^9.9.0",
     "eslint-plugin-react": "^7.35.0",
     "eslint-plugin-react-hooks": "^5.1.0-rc.0",
