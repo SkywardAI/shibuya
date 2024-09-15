@@ -30,4 +30,4 @@ nsis:
   createDesktopShortcut: true  # Create desktop shortcut after installation
   createStartMenuShortcut: true  # Create start menu shortcut
 
-publish: "never"
+publish: []
