@@ -23,7 +23,7 @@ export default function ScrollBarComponent({ cb, value, disabled, title, descrip
     }
 
     useEffect(()=>{
-        !isNaN(+textValue) && checkValue() && cb(textValue);
+        !isNaN(+textValue) && checkValue() && cb(+textValue);
     // eslint-disable-next-line
     }, [textValue])
 
