@@ -1,5 +1,5 @@
 # Shibuya
-[![Lint code](https://github.com/SkywardAI/shibuya/actions/workflows/lint.yml/badge.svg)](https://github.com/SkywardAI/shibuya/actions/workflows/lint.yml)  
+[![Lint code](https://github.com/SkywardAI/shibuya/actions/workflows/lint.yml/badge.svg)](https://github.com/SkywardAI/shibuya/actions/workflows/lint.yml) [![Release Distribution](https://github.com/SkywardAI/shibuya/actions/workflows/distribution.yml/badge.svg)](https://github.com/SkywardAI/shibuya/actions/workflows/distribution.yml)  
 A project built Electron + React.js, to dig out the potential of cross platform AI completion.
 
 ## Development Build
@@ -22,6 +22,12 @@ And
 pnpm run electron
 ```
 One on each terminal, so they won't conflict with each other.
+
+## Distributions
+There are some distribution files in releast page. Please download and run `SkywardaiChat-vX.Y.Z.(AppImage|dmg|exe)` according to your platform.  
+Currently there's no `Code Signing` in our distributions, so your defender might block you from using the application. Please allow install to use the distributions.  
+  
+> Sensitive informations are stored only at your own machine. No one can see them.
+
 ## References
 * [Wllama](https://github.com/ngxson/wllama)
-* [Voy](https://github.com/tantaraio/voy)
