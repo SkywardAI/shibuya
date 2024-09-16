@@ -12,7 +12,7 @@ function createWindow() {
         width: 900,
         minWidth: 560,
         minHeight: 250,
-        // autoHideMenuBar: true,
+        autoHideMenuBar: true,
     })
 
     if(app.isPackaged) {
