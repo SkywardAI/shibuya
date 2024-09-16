@@ -17,20 +17,31 @@ export async function getCredentials(json_credentials = null) {
 }
 
 export async function storeCredentials(credentials, all_filled, enabled = false) {
-    const update_result = await instance.updateByID('credentials', 'AWS', {json: JSON.stringify(credentials)})
+    const update_result = await instance.updateByID('credentials', 'AWS', {json: credentials})
     if(all_filled && enabled) await initBedrockClient();
     return !!update_result
 }
 
 export async function getJSONCredentials() {
     const record = await instance.getByID('credentials', 'AWS', ['json']);
-    return (record && record.json ? JSON.parse(record.json) : null);
+    if(!record) return null;
+    return record.json || null;
 }
 
 /**
  * @type {BedrockRuntimeClient?}
  */
 let bedrock_client = null;
+
+export async function setClient(client) {
+    if(!client) {
+        await initBedrockClient();
+        return bedrock_client;
+    } else {
+        bedrock_client = client;
+        return null;
+    }
+}
 
 export async function initBedrockClient() {
     const credentials = await getJSONCredentials();

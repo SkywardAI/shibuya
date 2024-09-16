@@ -4,8 +4,9 @@ import { FileImageFill, FileTextFill, Paperclip, Send, StopCircleFill } from 're
 import useIDB from "../../utils/idb";
 import { isModelLoaded, loadModel } from '../../utils/workers/worker'
 import { getCompletionFunctions } from "../../utils/workers";
+import { setClient } from "../../utils/workers/aws-worker";
 
-export default function Conversation({ uid }) {
+export default function Conversation({ uid, client }) {
 
     const [conversation, setConversation] = useState([]);
     const [message, setMessage] = useState('');
@@ -92,7 +93,7 @@ export default function Conversation({ uid }) {
                     content: new Uint8Array(await upload_file.arrayBuffer()),
                     format: upload_file.name.split('.').pop().toLowerCase()
                 }
-                if(!is_img) file_obj.name = upload_file.name;
+                if(!is_img) file_obj.name = upload_file.name.split('.').slice(0, -1).join('_');
                 user_message[
                     is_img ? 'image' : 'document'
                 ] = file_obj;
@@ -125,6 +126,19 @@ export default function Conversation({ uid }) {
             top: bubblesRef.current.scrollHeight
         })
     }, [conversation, pending_message])
+
+    useEffect(()=>{
+        if(!chat_functions.current) return;
+
+        if(chat_functions.current.platform === 'AWS') {
+            (async function() {
+                if(await setClient(client)) {
+                    await idb.updateOne('chat-history', {client}, [{uid}])
+                }
+            })()
+        }
+    // eslint-disable-next-line
+    }, [chat_functions, client])
 
     return (
         <div className="conversation-main">
