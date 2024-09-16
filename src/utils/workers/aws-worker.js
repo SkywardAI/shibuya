@@ -1,26 +1,24 @@
-import { fromCognitoIdentityPool } from "@aws-sdk/credential-providers";
 import { BedrockRuntimeClient, ConverseStreamCommand } from "@aws-sdk/client-bedrock-runtime";
 import { instance } from "../idb";
-import { getPlatformSettings } from "../platform_settings";
-import { genRandomID } from '../tools'
+import { getModelSettings, getPlatformSettings } from "../general_settings";
 
 export async function getCredentials(json_credentials = null) {
     const credentials = json_credentials || (await getJSONCredentials());
     if(!credentials) return null;
     
-    return fromCognitoIdentityPool({
-        clientConfig: { region: credentials.region },
-        identityPoolId: credentials.pool_id,
-        logins: {
-            'skywardai-developer-id-provider': genRandomID()
-        }
-    })
+    const obj = {
+        accessKeyId: credentials.key_id,
+        secretAccessKey: credentials.secret_key,
+    }
+    if(credentials.session_token) {
+        obj.sessionToken = credentials.session_token
+    }
+    return obj
 }
 
-export async function storeCredentials(region, pool_id, enabled = false) {
-    console.log(region, pool_id)
-    const update_result = await instance.updateByID('credentials', 'AWS', {json: JSON.stringify({region, pool_id})})
-    if(region && pool_id && enabled) await initBedrockClient();
+export async function storeCredentials(credentials, all_filled, enabled = false) {
+    const update_result = await instance.updateByID('credentials', 'AWS', {json: JSON.stringify(credentials)})
+    if(all_filled && enabled) await initBedrockClient();
     return !!update_result
 }
 
@@ -38,9 +36,9 @@ export async function initBedrockClient() {
     const credentials = await getJSONCredentials();
     if(!credentials) return false;
 
+    const { aws_region: region } = getPlatformSettings();
     bedrock_client = new BedrockRuntimeClient({
-        region: credentials.region,
-        credentials: (await getCredentials(credentials)) 
+        region, credentials: (await getCredentials(credentials)) 
     });
     return true;
 }
@@ -94,8 +92,8 @@ let abort_signal = false;
  * @returns { Promise<CompletionResponse | null> }
  */
 export async function chatCompletions(messages, cb = null) {
-    const { aws_model_id } = getPlatformSettings();
-    if(!aws_model_id || (!bedrock_client && !await initBedrockClient())) {
+    const { aws_model_id, aws_region } = getPlatformSettings();
+    if(!aws_model_id || !aws_region || (!bedrock_client && !await initBedrockClient())) {
         console.log('no bedrock')
         cb && cb("**Cannot Initialize AWS Bedrock Client**", true)
         return null;
@@ -109,41 +107,39 @@ export async function chatCompletions(messages, cb = null) {
             system.push({text: content});
             return;
         }
-        normal_messages.push({ role, content: [{text: content}] });
+        const message = {
+            role, content: [{text: content}]
+        }
         if(image) {
-            normal_messages.push({ 
-                role, content: [
-                    { image: { 
-                        format: image.format, 
-                        source: { bytes: image.content } 
-                    } }
-                ] 
-            })
+            message.content.push(
+                { image: { 
+                    format: image.format, 
+                    source: { bytes: image.content } 
+                } }
+            )
         }
         if(document) {
-            normal_messages.push({
-                role, content: [
-                    { document: { 
+            message.content.push(
+                { document: { 
                         format: document.format, 
                         name: document.name, 
                         source: { bytes: document.content } 
-                    } }
-                ] 
-            })
+                } }
+            )
         }
+        normal_messages.push(message);
     })
 
+    const { max_tokens:maxTokens, top_p:topP, temperature } = getModelSettings();
     const input = {
         modelId: aws_model_id,
         messages: normal_messages,
         inferenceConfig: {
-            maxTokens: 128,
-            temperature: 0.7,
-            topP: 0.9
+            maxTokens, temperature, topP
         }
     }
 
-    if(system) input.system = system;
+    if(system.length) input.system = system;
     let response_text = '', usage = {}
 
     abort_signal = false;

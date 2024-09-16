@@ -89,7 +89,8 @@ export default function Conversation({ uid }) {
             if(upload_file) {
                 const is_img = upload_file.type.startsWith('image')
                 const file_obj = {
-                    content: new Uint8Array(await upload_file.arrayBuffer())
+                    content: new Uint8Array(await upload_file.arrayBuffer()),
+                    format: upload_file.name.split('.').pop().toLowerCase()
                 }
                 if(!is_img) file_obj.name = upload_file.name;
                 user_message[

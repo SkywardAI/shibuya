@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import useIDB from '../utils/idb'
 import { downloadModel, isModelDownloaded, loadModel } from '../utils/workers/worker'
-import { getPlatformSettings } from '../utils/platform_settings';
+import { getPlatformSettings } from '../utils/general_settings';
 
 export default function Entry({complete}) {
 
