@@ -21,16 +21,17 @@ export default function Tickets({selectChat, current_chat}) {
                 title: 'New Conversation',
                 createdAt: timestamp,
                 updatedAt: timestamp,
-                uid: genRandomID()
+                uid: genRandomID(),
+                client: null
             }
         )
         const new_conv_info = await idb.getByID('chat-history', conv_id);
         new_conv_info &&
         setTickets([
-            ...tickets,
-            new_conv_info
+            new_conv_info,
+            ...tickets
         ])
-        selectChat(new_conv_info.uid)
+        selectChat(new_conv_info)
     }
 
     useEffect(()=>{
@@ -51,9 +52,9 @@ export default function Tickets({selectChat, current_chat}) {
                 return (
                     <Ticket 
                         key={`ticket-${title}-${uid}`}
-                        title={title} uid={uid}
+                        title={title} info={elem}
                         selectChat={selectChat}
-                        is_selected={current_chat && uid === current_chat}
+                        is_selected={current_chat.uid && uid === current_chat.uid}
                     />
                 )
             }) }
