@@ -1,4 +1,4 @@
-import { getPlatformSettings } from "../platform_settings";
+import { getPlatformSettings } from "../general_settings";
 import { chatCompletions as WllamaCompletions, abortCompletion as WllamaAbort } from "./worker";
 import { chatCompletions as AwsCompletions, abortCompletion as AwsAbort } from "./aws-worker"
 
