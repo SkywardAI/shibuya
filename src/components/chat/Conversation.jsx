@@ -53,7 +53,6 @@ export default function Conversation({ uid, client, updateClient }) {
             if(!isFinished) {
                 setPendingMessage(text);
             } else {
-                setPendingMessage('');
                 setConversation([
                     ...conversation, user_msg,
                     { role: 'assistant', content: text }
@@ -67,7 +66,6 @@ export default function Conversation({ uid, client, updateClient }) {
                 idb.updateOne(
                     'chat-history', {updatedAt: Date.now()}, [{uid}]
                 )
-                setHidePending(true);
             }
         }
 
@@ -106,13 +104,9 @@ export default function Conversation({ uid, client, updateClient }) {
             ]
         }
 
-        const result = await chat_functions.current.completions(messages, cb);
-        if(!result) {
-            setPendingMessage('');
-            setHidePending(true);
-        } else {
-            console.log(result)
-        }
+        await chat_functions.current.completions(messages, cb);
+        setPendingMessage('');
+        setHidePending(true);
     }
     
     useEffect(()=>{
@@ -163,7 +157,7 @@ export default function Conversation({ uid, client, updateClient }) {
                         }) }
                         <ConversationBubble
                             role={'assistant'} content={pending_message}
-                            hidden={hide_pending}
+                            hidden={hide_pending} special={true}
                         />
                     </div>
                     <form className="send-message-form" onSubmit={sendMessage}>
