@@ -111,9 +111,10 @@
     background-repeat: no-repeat;
     background-size: cover;
 
+    --title-bar-height: 40px;
     --send-input-height: 60px;
     --elem-size: 40px;
-    --bubbles-height: calc(100% - var(--send-input-height) - 10px);
+    --bubbles-height: calc(100% - var(--send-input-height) - var(--title-bar-height) - 10px);
 }
 
 .chat > .conversation-main::before {
@@ -142,6 +143,39 @@
     background-image: none;
 }
 
+.chat > .conversation-main > .title-bar {
+    background-color: var(--normal-bg-color);
+    width: 100%;
+    height: var(--title-bar-height);
+    padding: 0px 15px;
+    align-content: center;
+    font-size: 15px;
+    font-weight: bold;
+    color: rgb(50, 50, 50);
+
+    --elem-height: calc(var(--title-bar-height) - 14px);
+}
+
+.chat > .conversation-main > .title-bar > form {
+    display: flex;
+}
+
+.chat > .conversation-main > .title-bar .edit-title {
+    border: none;
+    background-color: transparent;
+    border-bottom: 1px solid gray;
+    padding: 0px 5px;
+    width: 100%;
+    font-size: 15px;
+    height: var(--elem-height);
+}
+
+.chat > .conversation-main > .title-bar .btn {
+    height: var(--elem-height);
+    width: var(--elem-height);
+    margin-left: 15px;
+}
+
 .chat > .conversation-main > .bubbles {
     height: var(--bubbles-height);
     width: 100%;
@@ -149,7 +183,7 @@
     margin-bottom: 10px;
     position: absolute;
     left: 0;
-    top: 0;
+    top: var(--title-bar-height);
     padding: 20px 10px;
 }
 

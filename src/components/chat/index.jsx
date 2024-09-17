@@ -40,6 +40,20 @@ export default function Chat() {
         resetRequestDelete();
     }
 
+    async function updateTitle(title) {
+        await idb.updateOne("chat-history", {title}, [{uid: chat.uid}])
+
+        selectChat({
+            ...chat, title: title
+        })
+
+        let history_cp = [...history];
+        history_cp[
+            history_cp.findIndex(e=>e.uid === chat.uid)
+        ].title = title;
+        setHistory(history_cp);
+    }
+
     useEffect(()=>{
         if(dialogRef.current) {
             if(showConfirm) dialogRef.current.showModal();
@@ -58,7 +72,11 @@ export default function Chat() {
                 setHistory={setHistory} history={history} 
                 deleteHistory={requestDelete}
             />
-            <Conversation uid={chat.uid} client={chat.client} updateClient={updateChatClient} />
+            <Conversation 
+                uid={chat.uid} 
+                title={chat.title} updateTitle={updateTitle}
+                client={chat.client} updateClient={updateChatClient}
+            />
             <dialog ref={dialogRef}>
                 <div>
                     Delete <strong>{conv_to_delete && conv_to_delete.title}</strong>?

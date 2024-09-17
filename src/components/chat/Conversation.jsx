@@ -1,19 +1,21 @@
 import { useEffect, useRef, useState } from "react";
 import ConversationBubble from "./ConversationBubble";
-import { FileImageFill, FileTextFill, Paperclip, Send, StopCircleFill } from 'react-bootstrap-icons';
+import { CheckCircle, FileImageFill, FileTextFill, Paperclip, Send, StopCircleFill, XCircle } from 'react-bootstrap-icons';
 import useIDB from "../../utils/idb";
 import { isModelLoaded, loadModel } from '../../utils/workers/worker'
 import { getCompletionFunctions } from "../../utils/workers";
 import { setClient as setAwsClient } from "../../utils/workers/aws-worker";
 import { setClient as setOpenaiClient } from "../../utils/workers/openai-worker";
 
-export default function Conversation({ uid, client, updateClient }) {
+export default function Conversation({ uid, title, updateTitle, client, updateClient }) {
 
     const [conversation, setConversation] = useState([]);
     const [message, setMessage] = useState('');
     const [pending_message, setPendingMessage] = useState('');
     const [hide_pending, setHidePending] = useState(true);
     const [upload_file, setUploadFile] = useState(null);
+    const [edit_title, toggleEditTitle] = useState(false);
+    const [edited_title, setEditedTitle] = useState(title);
     const chat_functions = useRef(getCompletionFunctions());
     const idb = useIDB();
 
@@ -108,6 +110,13 @@ export default function Conversation({ uid, client, updateClient }) {
         setPendingMessage('');
         setHidePending(true);
     }
+
+    function submitUpdateTitle() {
+        if(edited_title && edited_title !== title) {
+            updateTitle(edited_title);
+        }
+        toggleEditTitle(false);
+    }
     
     useEffect(()=>{
         uid && getConversationByUid();
@@ -123,7 +132,11 @@ export default function Conversation({ uid, client, updateClient }) {
     }, [conversation, pending_message])
 
     useEffect(()=>{
-        if(!chat_functions.current) return;
+        setEditedTitle(title);
+    }, [title])
+
+    useEffect(()=>{
+        if(!chat_functions.current || !uid) return;
 
         const platform = chat_functions.current.platform
         if(platform) {
@@ -139,13 +152,24 @@ export default function Conversation({ uid, client, updateClient }) {
             })()
         }
     // eslint-disable-next-line
-    }, [client])
+    }, [uid])
 
     return (
         <div className="conversation-main">
             {
                 uid ? 
                 <>
+                <div className="title-bar">
+                    {
+                        edit_title ? 
+                        <form onSubmit={evt=>{evt.preventDefault(); submitUpdateTitle()}}>
+                            <input className="edit-title" value={edited_title} onChange={evt=>setEditedTitle(evt.target.value)} />
+                            <CheckCircle className="btn clickable" onClick={submitUpdateTitle} />
+                            <XCircle className="btn clickable" onClick={()=>{setEditedTitle(title); toggleEditTitle(false)}} />
+                        </form>:
+                        <div className="text" onClick={()=>toggleEditTitle(true)}>{ title }</div>
+                    }
+                </div>
                 <div className="bubbles" ref={bubblesRef}>
                     { conversation.map(({role, content}, idx) => {
                         return (
