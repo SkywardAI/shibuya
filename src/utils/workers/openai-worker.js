@@ -96,6 +96,7 @@ export async function chatCompletions(messages, cb = null) {
             if(chunk.choices[0].finish_reason) break;
             if(abort_signal) break;
         }
+        cb && cb(response_text, true);
     } catch(error) {
         console.error(error);
         cb && cb(`**${error.name}**:\n\`\`\`\n${error.message}\n\`\`\``, true);

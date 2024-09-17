@@ -3,14 +3,14 @@ import Ticket from "./Ticket";
 import useIDB from "../../utils/idb";
 import { genRandomID } from "../../utils/tools";
 
-export default function Tickets({selectChat, current_chat, history, setHistory}) {
+export default function Tickets({selectChat, current_chat, history, setHistory, deleteHistory}) {
 
     const idb = useIDB();
 
     async function syncHistory() {
         const history = await idb.getAll('chat-history')
         history.sort((a, b)=>b.updatedAt - a.updatedAt)
-        setHistory(history)
+        setHistory(history.map(e=>{return {...e, client: null}}))
     }
 
     async function startNewConversation() {
@@ -27,7 +27,7 @@ export default function Tickets({selectChat, current_chat, history, setHistory})
         const new_conv_info = await idb.getByID('chat-history', conv_id);
         new_conv_info &&
         setHistory([
-            new_conv_info,
+            {...new_conv_info, client: null},
             ...history
         ])
         selectChat(new_conv_info)
@@ -50,9 +50,10 @@ export default function Tickets({selectChat, current_chat, history, setHistory})
                 const { title, uid } = elem;
                 return (
                     <Ticket 
-                        key={`ticket-${title}-${uid}`}
+                        key={`ticket-${uid}`}
                         title={title} info={elem}
                         selectChat={selectChat}
+                        deleteHistory={deleteHistory}
                         is_selected={current_chat.uid && uid === current_chat.uid}
                     />
                 )
