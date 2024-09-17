@@ -146,48 +146,48 @@ export default function Conversation({ uid, client, updateClient }) {
             {
                 uid ? 
                 <>
-                    <div className="bubbles" ref={bubblesRef}>
-                        { conversation.map(({role, content}, idx) => {
-                            return (
-                                <ConversationBubble 
-                                    key={`conversation-history-${uid}-${idx}`} 
-                                    role={role} content={content} 
-                                />
-                            )
-                        }) }
-                        <ConversationBubble
-                            role={'assistant'} content={pending_message}
-                            hidden={hide_pending} special={true}
-                        />
-                    </div>
-                    <form className="send-message-form" onSubmit={sendMessage}>
-                        <div className="input-container">
-                            {
-                                chat_functions.current && chat_functions.current.platform !== 'Wllama' &&
-                                <div className="button-container file-upload">
-                                    {
-                                        upload_file ? 
-                                        upload_file.type.startsWith("image") ? 
-                                        <FileImageFill className="button-icon highlight" /> : <FileTextFill className="button-icon highlight" />:
-                                        <Paperclip className="button-icon" />
-                                    }
-                                    <input 
-                                        type="file" className="clickable" 
-                                        title={upload_file ? `Append file ${upload_file.name}` : "Select file to append"}
-                                        onChange={evt=>setUploadFile(evt.target.files.length ? evt.target.files[0] : null)} />
-                                </div>
-                            }
-                            <input type="text" value={message} onChange={messageOnChange}/>
-                            <div className="button-container">
-                                { 
-                                    hide_pending ? 
-                                    <Send className="button-icon animated" /> :
-                                    <StopCircleFill className="button-icon clickable" onClick={chat_functions.current.abort} />
+                <div className="bubbles" ref={bubblesRef}>
+                    { conversation.map(({role, content}, idx) => {
+                        return (
+                            <ConversationBubble 
+                                key={`conversation-history-${uid}-${idx}`} 
+                                role={role} content={content} 
+                            />
+                        )
+                    }) }
+                    <ConversationBubble
+                        role={'assistant'} content={pending_message}
+                        hidden={hide_pending} special={true}
+                    />
+                </div>
+                <form className="send-message-form" onSubmit={sendMessage}>
+                    <div className="input-container">
+                        {
+                            chat_functions.current && chat_functions.current.platform !== 'Wllama' &&
+                            <div className="button-container file-upload">
+                                {
+                                    upload_file ? 
+                                    upload_file.type.startsWith("image") ? 
+                                    <FileImageFill className="button-icon highlight" /> : <FileTextFill className="button-icon highlight" />:
+                                    <Paperclip className="button-icon" />
                                 }
-                                <input type='submit' className={`clickable${!hide_pending?" disabled":''}`}/>
+                                <input 
+                                    type="file" className="clickable" 
+                                    title={upload_file ? `Append file ${upload_file.name}` : "Select file to append"}
+                                    onChange={evt=>setUploadFile(evt.target.files.length ? evt.target.files[0] : null)} />
                             </div>
+                        }
+                        <input type="text" value={message} onChange={messageOnChange}/>
+                        <div className="button-container">
+                            { 
+                                hide_pending ? 
+                                <Send className="button-icon animated" /> :
+                                <StopCircleFill className="button-icon clickable" onClick={chat_functions.current.abort} />
+                            }
+                            <input type='submit' className={`clickable${!hide_pending?" disabled":''}`}/>
                         </div>
-                    </form>
+                    </div>
+                </form>
                 </> :
                 <div className="no-conversation">Please select a conversation or start a new one.</div>
             }
