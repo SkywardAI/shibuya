@@ -1,20 +1,17 @@
 import { useState } from "react";
 import AwsSettings from "./AwsSettings";
-import { getPlatformSettings, updatePlatformSettings as setStorageSetting } from "../../utils/general_settings";
+import { getPlatformSettings, updatePlatformSettings } from "../../utils/general_settings";
 import ModelSettings from "./ModelSettings";
+import OpenaiSettings from "./OpenaiSettings";
 
 export default function Settings() {
 
-    const [platfom_settings, updatePlatformSettings] = useState(getPlatformSettings())
+    const [enabled_platform, setEnabledPlatform] = useState(getPlatformSettings().enabled_platform)
     const [ saveSettingTrigger, toggleSaveSetting ] = useState(false);
 
-    function updateSettings(settings) {
-        const new_settings = {
-            ...platfom_settings,
-            ...settings
-        }
-        updatePlatformSettings(new_settings);
-        setStorageSetting(new_settings);
+    function updatePlatform(platform = null) {
+        setEnabledPlatform(platform);
+        updatePlatformSettings({ enabled_platform: platform })
     }
 
     function save() {
@@ -29,8 +26,13 @@ export default function Settings() {
             />
             <AwsSettings 
                 trigger={saveSettingTrigger}
-                platform_setting={platfom_settings}
-                updatePlatformSetting={updateSettings}
+                enabled={enabled_platform === 'AWS'}
+                updateEnabled={set=>updatePlatform(set ? "AWS" : null)}
+            />
+            <OpenaiSettings 
+                trigger={saveSettingTrigger}
+                enabled={enabled_platform === 'OpenAI'}
+                updateEnabled={set=>updatePlatform(set ? "OpenAI" : null)}
             />
             <div className={`save-settings clickable${saveSettingTrigger?" saved":""}`} onClick={save}>
                 { saveSettingTrigger ? "Settings Saved!" : "Save Settings" }

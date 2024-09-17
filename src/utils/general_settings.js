@@ -2,7 +2,9 @@ const PLATFORM_SETTINGS_KEY = 'platform-settings'
 const DEFAULT_PLATFORM_SETTINGS = {
     enabled_platform: null,
     // aws
-    aws_model_id: '', aws_region: ''
+    aws_model_id: '', aws_region: '',
+    // openai
+    openai_model: ''
 }
 
 const MODEL_SETTINGS_KEY = 'general-model-settings'
@@ -12,7 +14,7 @@ const DEFAULT_MODEL_SETTINGS = {
     temperature: 0.7
 }
 
-function getSettings(key, default_settings) {
+function loadSettings(key, default_settings) {
     const setting = localStorage.getItem(key);
     if(!setting) {
         localStorage.setItem(key, JSON.stringify(default_settings))
@@ -20,22 +22,33 @@ function getSettings(key, default_settings) {
     return setting ? JSON.parse(setting) : default_settings;
 }
 
-function updateSettings(key, settings, default_settings) {
-    localStorage.setItem(key, JSON.stringify({...default_settings, ...settings}));
-}
+// =============================================================
+//                            MODEL
+// =============================================================
 
-export function getPlatformSettings() {
-    return getSettings(PLATFORM_SETTINGS_KEY, DEFAULT_PLATFORM_SETTINGS);
-}
-
-export function updatePlatformSettings(settings) {
-    updateSettings(PLATFORM_SETTINGS_KEY, settings, DEFAULT_PLATFORM_SETTINGS);
-}
+let model_settings = loadSettings(MODEL_SETTINGS_KEY, DEFAULT_MODEL_SETTINGS);
 
 export function getModelSettings() {
-    return getSettings(MODEL_SETTINGS_KEY, DEFAULT_MODEL_SETTINGS);
+    return model_settings;
 }
 
 export function updateModelSettings(settings) {
-    updateSettings(MODEL_SETTINGS_KEY, settings, DEFAULT_MODEL_SETTINGS);
+    model_settings = { ...model_settings, ...settings };
+    localStorage.setItem(MODEL_SETTINGS_KEY, JSON.stringify(model_settings));
+}
+
+
+// =============================================================
+//                           PLATFORM
+// =============================================================
+
+let platform_settings = loadSettings(PLATFORM_SETTINGS_KEY, DEFAULT_PLATFORM_SETTINGS);
+
+export function getPlatformSettings() {
+    return platform_settings;
+}
+
+export function updatePlatformSettings(settings) {
+    platform_settings = { ...platform_settings, ...settings }
+    localStorage.setItem(PLATFORM_SETTINGS_KEY, JSON.stringify(platform_settings));
 }
