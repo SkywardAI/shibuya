@@ -4,29 +4,16 @@ import SettingSection from "./SettingSection";
 import TextComponent from "./components/TextComponent";
 import PasswordComponent from "./components/PasswordComponent";
 import { getJSONCredentials, storeCredentials } from "../../utils/workers/aws-worker";
-import { getPlatformSettings } from "../../utils/general_settings";
+import { getPlatformSettings, updatePlatformSettings } from "../../utils/general_settings";
 
-export default function AwsSettings({ trigger, platform_setting, updatePlatformSetting }) {
+export default function AwsSettings({ trigger, enabled, updateEnabled }) {
 
-    const [ aws_enabled, setAwsEnabled ] = useState(false);
     const [ aws_region, setAwsRegion ] = useState('');
     const [ aws_key_id, setAwsKeyID ] = useState('');
     const [ aws_secret_key, setAwsSecretKey ] = useState('');
     const [ aws_session_token, setAwsSessionToken ] = useState('');
     const [ aws_model_id, setAwsModelID ] = useState('');
-
-    function setEnabled(is_enabled) {
-        if(aws_enabled && !is_enabled) {
-            updatePlatformSetting({
-                enabled_platform: null
-            })
-        } else if(!aws_enabled && is_enabled) {
-            updatePlatformSetting({
-                enabled_platform: 'AWS'
-            })
-        }
-    }
-
+    
     function saveSettings() {
         const credentials = {
             key_id: aws_key_id, secret_key: aws_secret_key
@@ -36,9 +23,9 @@ export default function AwsSettings({ trigger, platform_setting, updatePlatformS
         }
         storeCredentials(
             credentials, aws_key_id && aws_secret_key,
-            platform_setting.enabled_platform === 'AWS'
+            enabled
         )
-        updatePlatformSetting({
+        updatePlatformSettings({
             aws_model_id, aws_region
         })
     }
@@ -61,10 +48,6 @@ export default function AwsSettings({ trigger, platform_setting, updatePlatformS
     }, [])
 
     useEffect(()=>{
-        setAwsEnabled(platform_setting.enabled_platform === 'AWS');
-    }, [platform_setting])
-
-    useEffect(()=>{
         trigger && saveSettings();
     // eslint-disable-next-line
     }, [trigger])
@@ -73,37 +56,37 @@ export default function AwsSettings({ trigger, platform_setting, updatePlatformS
         <SettingSection title={'AWS Bedrock Settings'}>
             <TrueFalseComponent 
                 title={"Use AWS Bedrock For Completion"}
-                value={aws_enabled} cb={setEnabled}
+                value={enabled} cb={updateEnabled}
             />
             <PasswordComponent 
                 title={"Set Access Key ID"}
                 value={aws_key_id} cb={setAwsKeyID}
                 description={'Please input your AWS Access Key ID.'}
-                disabled={!aws_enabled}
+                disabled={!enabled}
             />
             <PasswordComponent 
                 title={"Set Secret Access Key"}
                 value={aws_secret_key} cb={setAwsSecretKey}
                 description={'Please input your AWS Secret Access Key.'}
-                disabled={!aws_enabled}
+                disabled={!enabled}
             />
             <PasswordComponent 
                 title={"Set Session Token"}
                 value={aws_session_token} cb={setAwsSessionToken}
                 description={'Please input your AWS Session Token.'}
-                disabled={!aws_enabled}
+                disabled={!enabled}
             />
             <TextComponent 
                 title={"Set AWS Region"}
                 value={aws_region} cb={setAwsRegion}
                 description={'Please input your AWS Bedrock Region.'}
-                disabled={!aws_enabled}
+                disabled={!enabled}
             />
             <TextComponent 
                 title={"Set Bedrock Model ID"}
                 value={aws_model_id} cb={setAwsModelID}
                 description={'Please input the Redrock Model ID you want to use.'}
-                disabled={!aws_enabled}
+                disabled={!enabled}
             />
         </SettingSection>
     )

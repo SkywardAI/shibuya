@@ -1,8 +1,8 @@
 {
   "name": "shibuya",
   "author": {
-      "name": "Bohan Cheng",
-      "email": "cbh778899@outlook.com"
+    "name": "Bohan Cheng",
+    "email": "cbh778899@outlook.com"
   },
   "version": "0.1.11",
   "main": "electron.js",
@@ -20,6 +20,7 @@
     "@aws-sdk/credential-providers": "^3.650.0",
     "@huggingface/jinja": "^0.3.0",
     "@wllama/wllama": "^1.16.0",
+    "openai": "^4.61.0",
     "react": "^18.3.1",
     "react-bootstrap-icons": "^1.11.4",
     "react-dom": "^18.3.1",

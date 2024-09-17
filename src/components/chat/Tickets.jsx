@@ -1,17 +1,16 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import Ticket from "./Ticket";
 import useIDB from "../../utils/idb";
 import { genRandomID } from "../../utils/tools";
 
-export default function Tickets({selectChat, current_chat}) {
+export default function Tickets({selectChat, current_chat, history, setHistory}) {
 
-    const [tickets, setTickets] = useState([]);
     const idb = useIDB();
 
     async function syncHistory() {
         const history = await idb.getAll('chat-history')
         history.sort((a, b)=>b.updatedAt - a.updatedAt)
-        setTickets(history)
+        setHistory(history)
     }
 
     async function startNewConversation() {
@@ -27,9 +26,9 @@ export default function Tickets({selectChat, current_chat}) {
         )
         const new_conv_info = await idb.getByID('chat-history', conv_id);
         new_conv_info &&
-        setTickets([
+        setHistory([
             new_conv_info,
-            ...tickets
+            ...history
         ])
         selectChat(new_conv_info)
     }
@@ -47,7 +46,7 @@ export default function Tickets({selectChat, current_chat}) {
             >
                 <div>Start New Chat</div>
             </div>
-            { tickets.map(elem => {
+            { history.map(elem => {
                 const { title, uid } = elem;
                 return (
                     <Ticket 

@@ -4,9 +4,10 @@ import { FileImageFill, FileTextFill, Paperclip, Send, StopCircleFill } from 're
 import useIDB from "../../utils/idb";
 import { isModelLoaded, loadModel } from '../../utils/workers/worker'
 import { getCompletionFunctions } from "../../utils/workers";
-import { setClient } from "../../utils/workers/aws-worker";
+import { setClient as setAwsClient } from "../../utils/workers/aws-worker";
+import { setClient as setOpenaiClient } from "../../utils/workers/openai-worker";
 
-export default function Conversation({ uid, client }) {
+export default function Conversation({ uid, client, updateClient }) {
 
     const [conversation, setConversation] = useState([]);
     const [message, setMessage] = useState('');
@@ -130,15 +131,21 @@ export default function Conversation({ uid, client }) {
     useEffect(()=>{
         if(!chat_functions.current) return;
 
-        if(chat_functions.current.platform === 'AWS') {
+        const platform = chat_functions.current.platform
+        if(platform) {
             (async function() {
-                if(await setClient(client)) {
-                    await idb.updateOne('chat-history', {client}, [{uid}])
+                let set_result = 
+                    platform === "AWS" ? await setAwsClient(client) :
+                    platform === "OpenAI" ? await setOpenaiClient(client) :
+                    null;
+                
+                if(set_result) {
+                    updateClient(set_result);
                 }
             })()
         }
     // eslint-disable-next-line
-    }, [chat_functions, client])
+    }, [client])
 
     return (
         <div className="conversation-main">

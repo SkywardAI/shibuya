@@ -16,10 +16,8 @@ export async function getCredentials(json_credentials = null) {
     return obj
 }
 
-export async function storeCredentials(credentials, all_filled, enabled = false) {
-    const update_result = await instance.updateByID('credentials', 'AWS', {json: credentials})
-    if(all_filled && enabled) await initBedrockClient();
-    return !!update_result
+export async function storeCredentials(credentials) {
+    return !!(await instance.updateByID('credentials', 'AWS', {json: credentials}))
 }
 
 export async function getJSONCredentials() {
@@ -34,7 +32,7 @@ export async function getJSONCredentials() {
 let bedrock_client = null;
 
 export async function setClient(client) {
-    if(!client) {
+    if(!client || !(client instanceof BedrockRuntimeClient)) {
         await initBedrockClient();
         return bedrock_client;
     } else {
@@ -153,7 +151,12 @@ export async function chatCompletions(messages, cb = null) {
     if(system.length) input.system = system;
     let response_text = '', usage = {}
 
-    abort_signal = false;
+    if(abort_signal) {
+        abort_signal = false;
+        cb && cb('', true);
+        return null;
+    }
+
     try {
         const command = new ConverseStreamCommand(input);
         const response = await bedrock_client.send(command);
@@ -168,11 +171,12 @@ export async function chatCompletions(messages, cb = null) {
             if(abort_signal) break;
         }
         cb && cb(response_text, true);
-        abort_signal = false;
     } catch(error) {
         console.error(error);
         cb && cb(`**${error.name}**:\n\`\`\`\n${error.message}\n\`\`\``, true);
         return null;
+    } finally {
+        abort_signal = false;
     }
     
     return { content: response_text, usage };
