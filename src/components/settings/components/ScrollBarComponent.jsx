@@ -16,6 +16,7 @@ export default function ScrollBarComponent({ cb, value, disabled, title, descrip
             setScrollValue(value);
         } else {
             if(!isNaN(+value)) {
+                if(value > max) value = max;
                 setScrollValue(times_10 ? value * 10 : value);
             }
             setTextValue(value);
@@ -23,7 +24,7 @@ export default function ScrollBarComponent({ cb, value, disabled, title, descrip
     }
 
     useEffect(()=>{
-        !isNaN(+textValue) && checkValue() && cb(+textValue);
+        textValue !== value && !isNaN(+textValue) && checkValue() && cb(+textValue);
     // eslint-disable-next-line
     }, [textValue])
 
