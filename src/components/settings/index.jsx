@@ -3,6 +3,7 @@ import AwsSettings from "./AwsSettings";
 import { getPlatformSettings, updatePlatformSettings } from "../../utils/general_settings";
 import ModelSettings from "./ModelSettings";
 import OpenaiSettings from "./OpenaiSettings";
+import WllamaSettings from "./WllamaSettings";
 
 export default function Settings() {
 
@@ -23,6 +24,10 @@ export default function Settings() {
         <div className="setting-page">
             <ModelSettings 
                 trigger={saveSettingTrigger}
+            />
+            <WllamaSettings 
+                trigger={saveSettingTrigger}
+                enabled={!enabled_platform}
             />
             <AwsSettings 
                 trigger={saveSettingTrigger}

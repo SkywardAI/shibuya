@@ -6,6 +6,7 @@ import wllamaSingle from '@wllama/wllama/src/single-thread/wllama.wasm?url';
 import wllamaMultiJS from '@wllama/wllama/src/multi-thread/wllama.js?url';
 import wllamaMulti from '@wllama/wllama/src/multi-thread/wllama.wasm?url';
 import wllamaMultiWorker from '@wllama/wllama/src/multi-thread/wllama.worker.mjs?url';
+import { getModelSettings, getPlatformSettings } from "../general_settings";
 
 const CONFIG_PATHS = {
     'single-thread/wllama.js': wllamaSingleJS,
@@ -14,6 +15,32 @@ const CONFIG_PATHS = {
     'multi-thread/wllama.wasm': wllamaMulti,
     'multi-thread/wllama.worker.mjs': wllamaMultiWorker,
 };
+
+let model_sampling_settings = {}
+
+export function loadModelSamplingSettings() {
+    const { 
+        wllama_threads, 
+        wllama_batch_size, 
+        wllama_context_length
+    } = getPlatformSettings();
+
+    const {
+        max_tokens,
+        top_p,
+        temperature
+    } = getModelSettings();
+
+    model_sampling_settings = { 
+        n_threads: wllama_threads, 
+        n_batch: wllama_batch_size, 
+        n_ctx: wllama_context_length,
+        nPredict: max_tokens,
+        temp: temperature,
+        top_p
+    }
+}
+loadModelSamplingSettings();
 
 const DEFAULT_CHAT_TEMPLATE = "{% for message in messages %}{{'<|im_start|>' + message['role'] + '\n' + message['content'] + '<|im_end|>' + '\n'}}{% endfor %}{% if add_generation_prompt %}{{ '<|im_start|>assistant\n' }}{% endif %}";
 
@@ -74,10 +101,9 @@ export async function loadModel(type = 'completion', cb = null) {
             await downloadModel(type, cb);
         }
         cb && cb('loading')
+        const {n_threads, n_batch, n_ctx} = model_sampling_settings;
         await instance.loadModelFromUrl(model_src, {
-            n_threads: 6,
-            n_ctx: 4096,
-            n_batch: 128,
+            n_threads, n_ctx, n_batch,
         });
     } catch(error) {
         console.error(error)
@@ -104,11 +130,13 @@ export async function formatPrompt(messages) {
 export async function chatCompletions(messages, cb = null) {
     stop_signal = false;
     try {
+        const { nPredict, temp, top_p } = model_sampling_settings;
+
         const prompt = await formatPrompt(messages)
         const result = await engines['completion'].instance.createCompletion(prompt, {
-            nPredict: 256,
+            nPredict,
             sampling: {
-                temp: 0.7
+                temp, top_p
             },
             onNewToken: (token, piece, currentText, optionals) => {
                 cb && cb(currentText, false);

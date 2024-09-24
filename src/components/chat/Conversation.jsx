@@ -85,7 +85,10 @@ export default function Conversation({ uid, title, updateTitle, client, updateCl
                 });
                 setPendingMessage('')
             }
-            messages = [user_msg];
+            
+            messages = 
+                chat_functions.current.continue_chat ? 
+                [...conversation, user_msg] : [user_msg];
         } else {
             let user_message = user_msg;
             if(upload_file) {
