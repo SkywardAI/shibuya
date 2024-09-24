@@ -36,7 +36,7 @@ export default function OpenaiSettings({ trigger, enabled, updateEnabled }) {
     }, [])
 
     return (
-        <SettingSection title={'General Model Settings'}>
+        <SettingSection title={'OpenAI Settings'}>
             <TrueFalseComponent 
                 title={"Use OpenAI For Completion"}
                 value={enabled} cb={updateEnabled}

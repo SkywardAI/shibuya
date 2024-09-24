@@ -152,8 +152,20 @@
     font-size: 15px;
     font-weight: bold;
     color: rgb(50, 50, 50);
+    align-content: center;
 
     --elem-height: calc(var(--title-bar-height) - 14px);
+}
+
+.chat > .conversation-main > .title-bar .display-title {
+    width: fit-content;
+    height: 100%;
+    display: flex;
+    align-items: center;
+}
+
+.chat > .conversation-main > .title-bar .display-title > .edit-icon {
+    margin-left: 10px;
 }
 
 .chat > .conversation-main > .title-bar > form {

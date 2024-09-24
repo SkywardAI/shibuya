@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import ConversationBubble from "./ConversationBubble";
-import { CheckCircle, FileImageFill, FileTextFill, Paperclip, Send, StopCircleFill, XCircle } from 'react-bootstrap-icons';
+import { CheckCircle, FileImageFill, FileTextFill, Paperclip, PencilFill, Send, StopCircleFill, XCircle } from 'react-bootstrap-icons';
 import useIDB from "../../utils/idb";
 import { isModelLoaded, loadModel } from '../../utils/workers/worker'
 import { getCompletionFunctions } from "../../utils/workers";
@@ -85,7 +85,10 @@ export default function Conversation({ uid, title, updateTitle, client, updateCl
                 });
                 setPendingMessage('')
             }
-            messages = [user_msg];
+            
+            messages = 
+                chat_functions.current.continue_chat ? 
+                [...conversation, user_msg] : [user_msg];
         } else {
             let user_message = user_msg;
             if(upload_file) {
@@ -167,7 +170,10 @@ export default function Conversation({ uid, title, updateTitle, client, updateCl
                             <CheckCircle className="btn clickable" onClick={submitUpdateTitle} />
                             <XCircle className="btn clickable" onClick={()=>{setEditedTitle(title); toggleEditTitle(false)}} />
                         </form>:
-                        <div className="text" onClick={()=>toggleEditTitle(true)}>{ title }</div>
+                        <div className="display-title clickable" onClick={()=>toggleEditTitle(true)}>
+                            <div className="text">{ title }</div>
+                            <PencilFill className="edit-icon" />
+                        </div>
                     }
                 </div>
                 <div className="bubbles" ref={bubblesRef}>

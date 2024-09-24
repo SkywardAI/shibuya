@@ -23,7 +23,10 @@ export function getCompletionFunctions() {
         case 'OpenAI':
             return { completions: OpenaiCompletions, abort: OpenaiAbort, platform: "OpenAI"}
         default:
-            return { completions: WllamaCompletions, abort: WllamaAbort, platform: "Wllama" }
+            return { 
+                completions: WllamaCompletions, abort: WllamaAbort, 
+                platform: "Wllama", continue_chat: platform_settings.wllama_continue_conv 
+            }
     }
     
 }

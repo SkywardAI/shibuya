@@ -4,7 +4,12 @@ const DEFAULT_PLATFORM_SETTINGS = {
     // aws
     aws_model_id: '', aws_region: '',
     // openai
-    openai_model: ''
+    openai_model: '', 
+    // wllama
+    wllama_threads: 4, 
+    wllama_batch_size: 128, 
+    wllama_context_length: 4096, 
+    wllama_continue_conv: false 
 }
 
 const MODEL_SETTINGS_KEY = 'general-model-settings'
