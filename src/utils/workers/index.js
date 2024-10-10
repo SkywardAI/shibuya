@@ -2,12 +2,13 @@ import { getPlatformSettings } from "../general_settings";
 import { chatCompletions as WllamaCompletions, abortCompletion as WllamaAbort } from "./worker";
 import { chatCompletions as AwsCompletions, abortCompletion as AwsAbort } from "./aws-worker"
 import { chatCompletions as OpenaiCompletions, abortCompletion as OpenaiAbort } from "./openai-worker";
+// import { chatCompletions as LlamaCompletions } from "./llamacpp-worker";
 
 /**
  * @typedef CompletionFunctions
  * @property {Function} completions
- * @property {Function} abort
- * @property {"Wllama" | "AWS" | "OpenAI"} platform
+ * @property {Function|undefined} abort
+ * @property {"Wllama" | "AWS" | "OpenAI" | "Llama"} platform
  */
 
 /**
@@ -22,6 +23,12 @@ export function getCompletionFunctions() {
             return { completions: AwsCompletions, abort: AwsAbort, platform: "AWS" }
         case 'OpenAI':
             return { completions: OpenaiCompletions, abort: OpenaiAbort, platform: "OpenAI"}
+        case 'Llama':
+            return { 
+                completions: window['node-llama-cpp'].chatCompletions, 
+                abort: window['node-llama-cpp'].abortCompletion, 
+                platform: 'Llama' 
+            }
         default:
             return { 
                 completions: WllamaCompletions, abort: WllamaAbort, 
