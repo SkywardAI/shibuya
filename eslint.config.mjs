@@ -36,4 +36,10 @@ export default [
       "react/prop-types": "off"
     },
   },
+  {
+    files: ["preloader/**"],
+    rules: {
+      'no-undef': "off"
+    }
+  }
 ]
