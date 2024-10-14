@@ -39,4 +39,16 @@ export const versions = [
             ]
         }
     },
+    {
+        'downloaded-models': {
+            op: 'new',
+            columns: [
+                { name: 'model-name' },
+                { name: 'url' },
+                { name: 'platform' },
+                { name: 'size' },
+                { name: 'createdAt' },
+            ]
+        }
+    },
 ]
