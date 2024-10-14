@@ -1,39 +1,56 @@
 import { getPlatformSettings } from "../general_settings";
 import { chatCompletions as WllamaCompletions, abortCompletion as WllamaAbort } from "./worker";
-import { chatCompletions as AwsCompletions, abortCompletion as AwsAbort } from "./aws-worker"
-import { chatCompletions as OpenaiCompletions, abortCompletion as OpenaiAbort } from "./openai-worker";
-// import { chatCompletions as LlamaCompletions } from "./llamacpp-worker";
+import { chatCompletions as AwsCompletions, abortCompletion as AwsAbort, setClient as AwsSetClient, formator as AwsFormator } from "./aws-worker"
+import { chatCompletions as OpenaiCompletions, abortCompletion as OpenaiAbort, setClient as OpenAISetClient } from "./openai-worker";
 
 /**
  * @typedef CompletionFunctions
  * @property {Function} completions
- * @property {Function|undefined} abort
+ * @property {Function} abort
+ * @property {Function} initClient
  * @property {"Wllama" | "AWS" | "OpenAI" | "Llama"} platform
+ * @property {Promise<Function<any>>|undefined} formator
  */
 
 /**
  * Get completion and abort functions of selected platform
  * @returns {CompletionFunctions}
  */
-export function getCompletionFunctions() {
-    const platform_settings = getPlatformSettings();
+export function getCompletionFunctions(platform = null) {
+    platform = platform || getPlatformSettings().enabled_platform;
     
-    switch(platform_settings.enabled_platform ) {
+    switch(platform) {
         case 'AWS':
-            return { completions: AwsCompletions, abort: AwsAbort, platform: "AWS" }
+            return { 
+                completions: AwsCompletions, 
+                abort: AwsAbort, platform: "AWS",
+                initClient: AwsSetClient,
+                formator: AwsFormator
+            }
         case 'OpenAI':
-            return { completions: OpenaiCompletions, abort: OpenaiAbort, platform: "OpenAI"}
+            return { 
+                completions: OpenaiCompletions, 
+                abort: OpenaiAbort, platform: "OpenAI",
+                initClient: OpenAISetClient
+            }
         case 'Llama':
             return { 
                 completions: window['node-llama-cpp'].chatCompletions, 
                 abort: window['node-llama-cpp'].abortCompletion, 
-                platform: 'Llama' 
+                platform: 'Llama',
+                initClient: window['node-llama-cpp'].setClient
             }
-        default:
-            return { 
-                completions: WllamaCompletions, abort: WllamaAbort, 
-                platform: "Wllama", continue_chat: platform_settings.wllama_continue_conv 
+        case "Wllama":
+            return {
+                completions: WllamaCompletions,
+                abort: WllamaAbort,
+                platform: "Wllama"
             }
+        // default:
+        //     return { 
+        //         completions: WllamaCompletions, abort: WllamaAbort, 
+        //         platform: "Wllama"
+        //     }
     }
     
 }
