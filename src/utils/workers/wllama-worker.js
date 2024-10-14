@@ -44,12 +44,18 @@ loadModelSamplingSettings();
 
 const DEFAULT_CHAT_TEMPLATE = "{% for message in messages %}{{'<|im_start|>' + message['role'] + '\n' + message['content'] + '<|im_end|>' + '\n'}}{% endfor %}{% if add_generation_prompt %}{{ '<|im_start|>assistant\n' }}{% endif %}";
 
+
 const engines = {
     completion: {
         model_src: "https://huggingface.co/HuggingFaceTB/smollm-360M-instruct-v0.2-Q8_0-GGUF/resolve/main/smollm-360m-instruct-add-basics-q8_0.gguf",
         instance: new Wllama(CONFIG_PATHS),
         download_percentage: 0
     }
+}
+
+export function setClient() {
+    // we don't need to reset client for wllama
+    return 'fake-client'
 }
 
 let stop_signal = false;
@@ -79,10 +85,16 @@ export async function downloadModel(type = 'completion', cb = null) {
         allowOffline: true,
         embeddings: type === 'embedding',
         progressCallback: ({loaded, total})=>{
-            cb && cb((loaded / total) * 100);
+            cb && cb((loaded / total) * 100, false);
         }
     })
-    cb && cb(100);
+    cb && cb(100, true);
+    return {
+        model_name: model_src.split('/').pop(),
+        url: model_src,
+        size: 0,
+        finish_time: Date.now()
+    }
 }
 
 export async function deleteModel(type = 'completion') {
