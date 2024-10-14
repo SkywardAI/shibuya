@@ -3,7 +3,7 @@ import Ticket from "./Ticket";
 import useIDB from "../../utils/idb";
 import { genRandomID } from "../../utils/tools";
 
-export default function Tickets({selectChat, current_chat, history, setHistory, deleteHistory}) {
+export default function Tickets({selectChat, current_chat, history, setHistory, deleteHistory, platform}) {
 
     const idb = useIDB();
 
@@ -21,7 +21,7 @@ export default function Tickets({selectChat, current_chat, history, setHistory, 
                 createdAt: timestamp,
                 updatedAt: timestamp,
                 uid: genRandomID(),
-                client: null
+                platform
             }
         )
         const new_conv_info = await idb.getByID('chat-history', conv_id);

@@ -13,7 +13,7 @@ export default function Ticket({ title, info, selectChat, is_selected, deleteHis
                 onClick={evt=>{
                     evt.stopPropagation();
                     deleteHistory({ uid: info.uid, title })
-                }} 
+                }}
             />
         </div>
     )
