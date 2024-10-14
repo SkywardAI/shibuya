@@ -21,7 +21,7 @@ export default function Chat() {
 
     const idb = useIDB();
     // const settings = useRef(getCompletionFunctions());
-    const settings = useRef(getCompletionFunctions('Llama'));
+    const settings = useRef(getCompletionFunctions());
 
     async function sendMessage(message, files) {
         // save user messages
@@ -143,11 +143,6 @@ export default function Chat() {
                 setHistory={setTickets} history={tickets} 
                 deleteHistory={requestDelete} platform={settings.current.platform}
             />
-            {/* <Conversation 
-                uid={chat.uid} 
-                title={chat.title} updateTitle={updateTitle}
-                client={chat.client} updateClient={updateChatClient}
-            /> */}
             <ChatPage 
                 updateTitle={updateTitle}
                 chat={chat} chat_history={chat_history}

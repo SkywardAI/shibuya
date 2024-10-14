@@ -1,6 +1,6 @@
 import { getPlatformSettings } from "./general_settings";
 import { instance } from "./idb";
-import { loadModel } from "./workers/worker";
+import { loadModel } from "./workers/wllama-worker";
 
 export default async function loader() {
     localStorage.setItem('not-first-time', '1');

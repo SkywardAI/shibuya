@@ -1,5 +1,5 @@
 import { getModelSettings, getPlatformSettings } from "../general_settings";
-import { chatCompletions as WllamaCompletions, abortCompletion as WllamaAbort } from "./worker";
+import { chatCompletions as WllamaCompletions, abortCompletion as WllamaAbort, setClient as WllamaSetClient } from "./wllama-worker";
 import { chatCompletions as AwsCompletions, abortCompletion as AwsAbort, setClient as AwsSetClient, formator as AwsFormator } from "./aws-worker"
 import { chatCompletions as OpenaiCompletions, abortCompletion as OpenaiAbort, setClient as OpenAISetClient } from "./openai-worker";
 
@@ -45,13 +45,9 @@ export function getCompletionFunctions(platform = null) {
             return {
                 completions: WllamaCompletions,
                 abort: WllamaAbort,
-                platform: "Wllama"
+                platform: "Wllama",
+                initClient: WllamaSetClient
             }
-        // default:
-        //     return { 
-        //         completions: WllamaCompletions, abort: WllamaAbort, 
-        //         platform: "Wllama"
-        //     }
     }
     
 }
