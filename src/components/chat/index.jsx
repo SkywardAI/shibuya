@@ -127,8 +127,9 @@ export default function Chat() {
                 message_history = messages;
                 setChatHistory(messages)
             }).finally(()=>{
+                const client = settings.current.initClient(chat.client || null, message_history)
                 if(!chat.client) {
-                    updateChatClient(settings.current.initClient(null, message_history))
+                    updateChatClient(client)
                 }
             })
         }

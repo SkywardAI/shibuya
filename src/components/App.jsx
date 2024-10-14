@@ -20,6 +20,6 @@ export default function App() {
         load_status === LOAD_FINISHED || load_status === LOAD_SKIP_SETTINGS ?
         <RouterProvider router={router} /> :
         load_status === LOAD_SET_SETTINGS ?
-        <Settings /> : <></>
+        <Settings complete={()=>setLoadStatus(LOAD_FINISHED)} /> : <></>
     )
 }
