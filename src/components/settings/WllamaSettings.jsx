@@ -5,7 +5,7 @@ import ScrollBarComponent from "./components/ScrollBarComponent";
 import { getPlatformSettings, updatePlatformSettings } from "../../utils/general_settings";
 import { loadModel, loadModelSamplingSettings } from "../../utils/workers/worker";
 
-export default function WllamaSettings({ trigger, enabled }) {
+export default function WllamaSettings({ trigger, enabled, updateEnabled }) {
 
     const [ threads, setThreads ] = useState(1);
     const [ batch_size, setBatchSize ] = useState(256);
@@ -47,7 +47,12 @@ export default function WllamaSettings({ trigger, enabled }) {
     }, [])
 
     return (
-        <SettingSection title={'Local Model Settings'}>
+        <SettingSection title={'Wllama Engine Settings'}>
+            <TrueFalseComponent 
+                title={"Use Wllama Engine For Completion"}
+                description={"Wllama is an Webassembly engine that allows you to run customized language models usually under 2GB on CPU."}
+                value={enabled} cb={updateEnabled}
+            />
             <ScrollBarComponent 
                 title={"Set Threads to use"}
                 value={threads} cb={setThreads}

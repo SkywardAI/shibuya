@@ -9,7 +9,7 @@ const PLATFORM_SETTINGS_KEY = 'platform-settings'
  * @property {Number} wllama_batch_size
  * @property {Number} wllama_context_length
  * @property {Boolean} wllama_continue_conv
- * @property {String} llama_model_name
+ * @property {String} llama_model_url
  */
 const DEFAULT_PLATFORM_SETTINGS = {
     enabled_platform: null,
@@ -21,7 +21,9 @@ const DEFAULT_PLATFORM_SETTINGS = {
     wllama_threads: 4, 
     wllama_batch_size: 128, 
     wllama_context_length: 4096, 
-    wllama_continue_conv: false 
+    wllama_continue_conv: false,
+    // llama
+    llama_model_url: ''
 }
 
 const MODEL_SETTINGS_KEY = 'general-model-settings'
