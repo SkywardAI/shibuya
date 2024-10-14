@@ -1,4 +1,16 @@
 const PLATFORM_SETTINGS_KEY = 'platform-settings'
+/**
+ * @typedef PlatformSettings 
+ * @property {"Wllama"|"Llama"|"AWS"|"OpenAI"} enabled_platform
+ * @property {String} aws_model_id
+ * @property {String} aws_region
+ * @property {String} openai_model
+ * @property {Number} wllama_threads
+ * @property {Number} wllama_batch_size
+ * @property {Number} wllama_context_length
+ * @property {Boolean} wllama_continue_conv
+ * @property {String} llama_model_name
+ */
 const DEFAULT_PLATFORM_SETTINGS = {
     enabled_platform: null,
     // aws
@@ -13,6 +25,12 @@ const DEFAULT_PLATFORM_SETTINGS = {
 }
 
 const MODEL_SETTINGS_KEY = 'general-model-settings'
+/**
+ * @typedef ModelSettings
+ * @property {Number} max_tokens
+ * @property {Number} top_p
+ * @property {Number} temperature
+ */
 const DEFAULT_MODEL_SETTINGS = {
     max_tokens: 128,
     top_p: 0.9,
@@ -33,6 +51,10 @@ function loadSettings(key, default_settings) {
 
 let model_settings = loadSettings(MODEL_SETTINGS_KEY, DEFAULT_MODEL_SETTINGS);
 
+/**
+ * get current general model sampling settings
+ * @returns {ModelSettings}
+ */
 export function getModelSettings() {
     return model_settings;
 }
@@ -49,6 +71,10 @@ export function updateModelSettings(settings) {
 
 let platform_settings = loadSettings(PLATFORM_SETTINGS_KEY, DEFAULT_PLATFORM_SETTINGS);
 
+/**
+ * get platform related settings
+ * @returns {PlatformSettings}
+ */
 export function getPlatformSettings() {
     return platform_settings;
 }
