@@ -7,13 +7,17 @@ export default async function loader() {
     await instance.initDB();
 
     const settings = getPlatformSettings();
+    let info;
 
     switch(settings.enabled_platform) {
         case "Wllama":
             await loadModel();
             return;
         case "Llama":
-            await window['node-llama-cpp'].loadModel(settings.llama_model_name || 'Phi-3-mini-4k-instruct-q4.gguf');
+            info = await instance.getOne('downloaded-models', {where: [{platform: "Llama", url: settings.llama_model_url}]})
+            if(info) {
+                await window['node-llama-cpp'].loadModel(info['model-name']);
+            }
             return;
     }
 }
