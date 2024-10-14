@@ -31,5 +31,12 @@ export const versions = [
                 { name: 'json' }
             ]
         }
-    }
+    },
+    {
+        'chat-history': {
+            columns: [
+                { name: 'platform' },
+            ]
+        }
+    },
 ]
