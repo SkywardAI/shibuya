@@ -3,16 +3,19 @@ import SettingSection from "./SettingSection";
 import TrueFalseComponent from "./components/TrueFalseComponent";
 import ScrollBarComponent from "./components/ScrollBarComponent";
 import { getPlatformSettings, updatePlatformSettings } from "../../utils/general_settings";
-import { loadModel, loadModelSamplingSettings } from "../../utils/workers/worker";
+import { downloadModel, isModelDownloaded, loadModel, loadModelSamplingSettings } from "../../utils/workers/wllama-worker";
+import useIDB from "../../utils/idb";
 
-export default function WllamaSettings({ trigger, enabled, updateEnabled }) {
+export default function WllamaSettings({ trigger, enabled, updateEnabled, openDownloadProtector }) {
 
     const [ threads, setThreads ] = useState(1);
     const [ batch_size, setBatchSize ] = useState(256);
     const [ context_length, setContextLength ] = useState(4096);
     const [ continue_conv, setContinueConversation ] = useState(false);
 
-    function saveSettings() {
+    const idb = useIDB();
+
+    async function saveSettings() {
         updatePlatformSettings({
             wllama_threads: threads,
             wllama_batch_size: batch_size,
@@ -22,7 +25,25 @@ export default function WllamaSettings({ trigger, enabled, updateEnabled }) {
 
         if(enabled) {
             loadModelSamplingSettings();
-            loadModel('completion');
+            const model = 'completion'
+            if(!(await isModelDownloaded(model))) {
+                await openDownloadProtector(
+                    "Please wait while we downloading the model...",
+                    `Downloading model smollm-360m-instruct-add-basics-q8_0.gguf`,
+                    async callback => {
+                        const download_result = await downloadModel(model, callback);
+                        if(!download_result) return;
+                        const { model_name, url, finish_time, size } = download_result;
+                        await idb.insert("downloaded-models", {
+                            'model-name': model_name,
+                            url, size, createdAt: finish_time,
+                            platform: 'Wllama'
+                        })
+                    }
+                )
+            }
+
+            await loadModel('completion');
         }
     }
 
