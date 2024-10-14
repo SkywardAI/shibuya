@@ -22,7 +22,6 @@ export default function LlamaSettings({ trigger, enabled, updateEnabled, openDow
         if(enabled) {
             // check if model with this url already downloaded
             let stored_model = await idb.getOne("downloaded-models", {where: [{ platform: 'Llama', url }]})
-            console.log(stored_model)
             // if no model record, means not downloaded
             if(!stored_model) {
                 await openDownloadProtector(
