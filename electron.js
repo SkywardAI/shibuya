@@ -1,5 +1,5 @@
 // eslint-disable-next-line
-const { app, Menu, BrowserWindow } = require('electron');
+const { app, Menu, BrowserWindow, ipcMain } = require('electron');
 // eslint-disable-next-line
 const path = require('path');
 
@@ -13,6 +13,12 @@ function createWindow() {
         minWidth: 560,
         minHeight: 250,
         autoHideMenuBar: true,
+        webPreferences: {
+            // eslint-disable-next-line
+            preload: path.join(__dirname, 'preloader', 'index.js'),
+            nodeIntegration: true,
+            contextIsolation: true
+        }
     })
 
     if(app.isPackaged) {

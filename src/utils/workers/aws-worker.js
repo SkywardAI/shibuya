@@ -55,24 +55,28 @@ export async function initBedrockClient() {
 let abort_signal = false;
 
 /**
- * @typedef ImageMessage
- * @property {"png" | "jpeg" | "gif" | "webp"} format Format of image
- * @property {Uint8Array} content Content in bytes
+ * @typedef AWSInferenceFileSource
+ * @property {Uint8Array} bytes The file content in Uint8Array
  */
 
 /**
- * @typedef DocumentMessage
- * @property { "pdf" | "csv" | "doc" | "docx" | "xls" | "xlsx" | "html" | "txt" | "md"} format Format of the document
- * @property {String} name Name of the document
- * @property {Uint8Array} content Content in bytes
+ * @typedef AWSInferenceFile
+ * @property {String|undefined} name Only when the file type is `document` requires this
+ * @property {String} format The format of file
+ * @property {AWSInferenceFileSource} source source of the file
+ */
+
+/**
+ * @typedef AWSInferenceContent
+ * @property {String} text Text to send
+ * @property {AWSInferenceFile} image image to be sent, max 20 in one sesion
+ * @property {AWSInferenceFile} document document to be sent, max 5 in one session
  */
 
 /**
  * @typedef Message
  * @property {"user"|"assistant"|"system"} role Sender
- * @property {String} content Message content
- * @property {ImageMessage?} image Optional, send model an image for reference
- * @property {DocumentMessage?} document Optional, send model a document for reference
+ * @property {AWSInferenceContent} content Message content, can format using `formator()`
  */
 
 /**
@@ -111,32 +115,14 @@ export async function chatCompletions(messages, cb = null) {
     const system = [];
     const normal_messages = [];
     
-    messages.forEach(({ role, content, image, document })=>{
+    messages.forEach(message=>{
+        const { role } = message;
+        
         if(role === 'system') {
-            system.push({text: content});
-            return;
+            system.push(message);
+        } else {
+            normal_messages.push(message);
         }
-        const message = {
-            role, content: [{text: content}]
-        }
-        if(image) {
-            message.content.push(
-                { image: { 
-                    format: image.format, 
-                    source: { bytes: image.content } 
-                } }
-            )
-        }
-        if(document) {
-            message.content.push(
-                { document: { 
-                        format: document.format, 
-                        name: document.name, 
-                        source: { bytes: document.content } 
-                } }
-            )
-        }
-        normal_messages.push(message);
     })
 
     const { max_tokens:maxTokens, top_p:topP, temperature } = getModelSettings();
@@ -184,4 +170,56 @@ export async function chatCompletions(messages, cb = null) {
 
 export function abortCompletion() {
     abort_signal = true;
+}
+
+export async function formator(messages, files = []) {
+    let last_role;
+
+    const common_messages = [];
+    const system_messages = [];
+
+    for(const message of messages) {
+        const { role, content } = message;
+        const msg = {role, content: [{text:content}]};
+        // if user asked for twice, ignore the last one
+        if(/^(user|assistant)$/.test(role)) {
+            role === last_role && common_messages.pop();
+            last_role = role;
+            common_messages.push(msg)
+        } else {
+            system_messages.push(msg)
+        }
+    }
+
+    // append files
+    if(files.length) {
+        for(const file of files) {
+            const file_info = file.name.split('.')
+            const extension = file_info.pop();
+            const filename = file_info.join('_');
+            const bytes = await file.arrayBuffer()
+
+            if(/^image\/.+/.test(file.type)) {
+                common_messages[common_messages.length - 1].content.push(
+                    {
+                        image: {
+                            format: extension,
+                            source: { bytes  }
+                        }
+                    }
+                )
+            } else {
+                common_messages[common_messages.length - 1].content.push(
+                    {
+                        document: {
+                            name: filename,
+                            format: extension,
+                            source: { bytes  }
+                        }
+                    }
+                )
+            }
+        }
+    }
+    return [...common_messages, ...system_messages]
 }

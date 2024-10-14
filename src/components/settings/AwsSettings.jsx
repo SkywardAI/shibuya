@@ -36,9 +36,9 @@ export default function AwsSettings({ trigger, enabled, updateEnabled }) {
             const credentials = await getJSONCredentials();
 
             if(credentials) {
-                setAwsKeyID(credentials.key_id);
-                setAwsSecretKey(credentials.secret_key);
-                setAwsSessionToken(credentials.session_token);
+                setAwsKeyID(credentials.key_id || "");
+                setAwsSecretKey(credentials.secret_key || "");
+                setAwsSessionToken(credentials.session_token || "");
             }
 
             const { aws_model_id: model_id, aws_region: region } = getPlatformSettings();
