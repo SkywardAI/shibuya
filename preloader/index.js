@@ -1,12 +1,14 @@
 const { contextBridge } = require('electron')
 const {
     loadModel,
-    clearHistory,
     chatCompletions,
     abortCompletion,
-    setClient
+    setClient, 
+    downloadModel,
+    updateModelSettings
 } = require("./node-llama-cpp-preloader.js")
 
 contextBridge.exposeInMainWorld('node-llama-cpp', {
-    loadModel, chatCompletions, clearHistory, abortCompletion, setClient
+    loadModel, chatCompletions, updateModelSettings,
+    abortCompletion, setClient, downloadModel
 })
