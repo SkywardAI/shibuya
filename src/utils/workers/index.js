@@ -1,4 +1,4 @@
-import { getPlatformSettings } from "../general_settings";
+import { getModelSettings, getPlatformSettings } from "../general_settings";
 import { chatCompletions as WllamaCompletions, abortCompletion as WllamaAbort } from "./worker";
 import { chatCompletions as AwsCompletions, abortCompletion as AwsAbort, setClient as AwsSetClient, formator as AwsFormator } from "./aws-worker"
 import { chatCompletions as OpenaiCompletions, abortCompletion as OpenaiAbort, setClient as OpenAISetClient } from "./openai-worker";
@@ -34,6 +34,7 @@ export function getCompletionFunctions(platform = null) {
                 initClient: OpenAISetClient
             }
         case 'Llama':
+            window['node-llama-cpp'].updateModelSettings(getModelSettings())
             return { 
                 completions: window['node-llama-cpp'].chatCompletions, 
                 abort: window['node-llama-cpp'].abortCompletion, 
