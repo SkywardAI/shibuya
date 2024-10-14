@@ -1,14 +1,12 @@
-const { contextBridge, ipcRenderer } = require('electron')
+const { contextBridge } = require('electron')
 const {
     loadModel,
-    reloadSession,
     clearHistory,
     chatCompletions,
-    abortCompletion
+    abortCompletion,
+    setClient
 } = require("./node-llama-cpp-preloader.js")
 
 contextBridge.exposeInMainWorld('node-llama-cpp', {
-    loadModel, reloadSession, chatCompletions, clearHistory, abortCompletion
+    loadModel, chatCompletions, clearHistory, abortCompletion, setClient
 })
-
-ipcRenderer.send('preload-complete')

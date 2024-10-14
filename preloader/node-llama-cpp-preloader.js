@@ -14,7 +14,7 @@ importer();
 const model_path = path.join(__dirname, '..', 'models')
 // const model_path = path.join(path.dirname(fileURLToPath(import.meta.url)), '..', 'models')
 
-let llama_session, context, stop_signal;
+let llama_session, stop_signal;
 
 /**
  * Load a model and init the llama session
@@ -26,20 +26,24 @@ async function loadModel(model_name = '') {
         modelPath: path.join(model_path, model_name)
     })
 
-    context = await model.createContext();
-    await reloadSession();
-}
-
-/**
- * Reload the llama session
- * @returns {Promise<boolean>} If model not loaded, resolves false, otherwise resolves true. 
- */
-async function reloadSession() {
-    if(!context) return false;
+    const context = await model.createContext();
     llama_session = new LlamaChatSession({
         contextSequence: context.getSequence()
     })
-    return true;
+}
+
+/**
+ * Set the session
+ * @param {String} client 
+ * @returns 
+ */
+async function setClient(client, history = null) {
+    clearHistory();
+    // if(history) {
+
+    // }
+
+    return 'fake-client';
 }
 
 /**
@@ -112,8 +116,8 @@ function abortCompletion() {
 
 module.exports = {
     loadModel,
-    reloadSession,
     clearHistory,
     chatCompletions,
-    abortCompletion
+    abortCompletion,
+    setClient
 }

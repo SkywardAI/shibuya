@@ -14,6 +14,7 @@ function createWindow() {
         minHeight: 250,
         autoHideMenuBar: true,
         webPreferences: {
+            // eslint-disable-next-line
             preload: path.join(__dirname, 'preloader', 'index.js'),
             nodeIntegration: true,
             contextIsolation: true
@@ -28,19 +29,9 @@ function createWindow() {
         win.loadURL("http://localhost:3000");
     }
 
-    async function start() {
-        await Promise.all([
-            new Promise(r=>ipcMain.on('preload-complete', r)),
-            new Promise(r=>win.once("ready-to-show", r))
-        ])
+    win.once("ready-to-show", ()=>{
         win.show();
-    }
-
-    start()
-
-    // win.once("ready-to-show", ()=>{
-    //     win.show();
-    // })
+    })
 }
 
 app.whenReady().then(() => {
