@@ -1,17 +1,20 @@
-const { createWriteStream, existsSync, statSync } = require("fs");
+const { ipcRenderer } = require("electron");
+const { createWriteStream, existsSync, statSync, mkdirSync } = require("fs");
 const path = require("path");
 
 let llama, getLlama, LlamaChatSession, current_model;
 
-async function importer() {
+let model_path = '';
+async function initer() {
     const nodeLlamaCpp = await import('node-llama-cpp')
     getLlama = nodeLlamaCpp.getLlama;
     LlamaChatSession = nodeLlamaCpp.LlamaChatSession;
-}
-importer();
 
-const model_path = path.join(__dirname, '..', 'models')
-// const model_path = path.join(path.dirname(fileURLToPath(import.meta.url)), '..', 'models')
+    const {isPackaged, userDataPath} = await ipcRenderer.invoke('electron-settings');
+    model_path = isPackaged ? path.join(userDataPath, 'models') : path.join(__dirname, '..', 'models')
+    if(!existsSync(model_path)) mkdirSync(model_path)
+}
+initer();
 
 let llama_session, stop_signal;
 
@@ -22,14 +25,15 @@ let llama_session, stop_signal;
 async function loadModel(model_name = '') {
     if(!model_name || current_model === model_name) return;
     current_model = model_name;
+    const modelPath = path.join(model_path, model_name)
+    if(!existsSync(modelPath)) {
+        return;
+    }
 
     if(llama) await llama.dispose();
 
     llama = await getLlama()
-    const model = await llama.loadModel({
-        modelPath: path.join(model_path, model_name)
-    })
-
+    const model = await llama.loadModel({modelPath})
     const context = await model.createContext();
     llama_session = new LlamaChatSession({
         contextSequence: context.getSequence()

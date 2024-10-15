@@ -24,7 +24,7 @@ function createWindow() {
     if(app.isPackaged) {
         // eslint-disable-next-line
         win.loadFile(path.join(__dirname, 'dist/index.html'))
-        Menu.setApplicationMenu(null);
+        // Menu.setApplicationMenu(null);
     } else {
         win.loadURL("http://localhost:3000");
     }
@@ -45,4 +45,8 @@ app.whenReady().then(() => {
     app.on('activate', () => {
         BrowserWindow.getAllWindows().length === 0 && createWindow()
     })
+})
+
+ipcMain.handle('electron-settings', ()=>{
+    return { userDataPath: app.getPath("userData"), isPackaged: app.isPackaged }
 })
