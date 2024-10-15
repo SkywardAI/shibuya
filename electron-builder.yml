@@ -17,7 +17,7 @@ win:
 
 mac:
   target:
-    - dmg  # macOS installer type
+    - dir
 
 linux:
   target:
