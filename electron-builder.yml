@@ -13,16 +13,15 @@ files:
 
 win:
   target:
-    - nsis  # Windows installer type, you can use zip, nsis, etc.
+    - nsis
 
 mac:
   target:
-    - default
+    - zip
 
 linux:
   target:
     - AppImage
-    # - deb  # You can also specify 'deb', 'rpm', etc.
 
 nsis:
   oneClick: false  # Whether the installer is one-click
