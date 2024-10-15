@@ -85,7 +85,7 @@ export async function downloadModel(type = 'completion', cb = null) {
         allowOffline: true,
         embeddings: type === 'embedding',
         progressCallback: ({loaded, total})=>{
-            cb && cb((loaded / total) * 100, false);
+            cb && cb(+((loaded / total) * 100).toFixed(2), false);
         }
     })
     cb && cb(100, true);
