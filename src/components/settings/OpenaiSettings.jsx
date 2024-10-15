@@ -6,16 +6,17 @@ import PasswordComponent from "./components/PasswordComponent";
 import { getPlatformSettings, updatePlatformSettings } from "../../utils/general_settings";
 import { getCredentials, storeCredentials } from "../../utils/workers/openai-worker";
 
-export default function OpenaiSettings({ trigger, enabled, updateEnabled }) {
+export default function OpenaiSettings({ trigger, enabled, updateEnabled, updateState }) {
 
     const [api_key, setAPIKey] = useState('');
     const [model_name, setModelName] = useState('');
 
-    function saveSettings() {
+    async function saveSettings() {
         updatePlatformSettings({
             openai_model: model_name
         })
-        storeCredentials({api_key})
+        await storeCredentials({api_key})
+        updateState()
     }
 
     useEffect(()=>{

@@ -6,7 +6,7 @@ import PasswordComponent from "./components/PasswordComponent";
 import { getJSONCredentials, storeCredentials } from "../../utils/workers/aws-worker";
 import { getPlatformSettings, updatePlatformSettings } from "../../utils/general_settings";
 
-export default function AwsSettings({ trigger, enabled, updateEnabled }) {
+export default function AwsSettings({ trigger, enabled, updateEnabled, updateState }) {
 
     const [ aws_region, setAwsRegion ] = useState('');
     const [ aws_key_id, setAwsKeyID ] = useState('');
@@ -14,20 +14,21 @@ export default function AwsSettings({ trigger, enabled, updateEnabled }) {
     const [ aws_session_token, setAwsSessionToken ] = useState('');
     const [ aws_model_id, setAwsModelID ] = useState('');
     
-    function saveSettings() {
+    async function saveSettings() {
         const credentials = {
             key_id: aws_key_id, secret_key: aws_secret_key
         }
         if(aws_session_token) {
             credentials.session_token = aws_session_token
         }
-        storeCredentials(
-            credentials, aws_key_id && aws_secret_key,
-            enabled
-        )
         updatePlatformSettings({
             aws_model_id, aws_region
         })
+        await storeCredentials(
+            credentials, aws_key_id && aws_secret_key,
+            enabled
+        )
+        updateState();
     }
 
     // get aws credentials from db

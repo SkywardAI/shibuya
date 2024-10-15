@@ -6,7 +6,7 @@ import useIDB from "../../utils/idb";
 import { getPlatformSettings, updatePlatformSettings } from "../../utils/general_settings";
 import { DEFAULT_LLAMA_CPP_MODEL_URL } from "../../utils/types";
 
-export default function LlamaSettings({ trigger, enabled, updateEnabled, openDownloadProtector }) {
+export default function LlamaSettings({ trigger, enabled, updateEnabled, openDownloadProtector, updateState }) {
 
     const [model_download_link, setModelDownloadLink] = useState('');
     const idb = useIDB();
@@ -44,6 +44,7 @@ export default function LlamaSettings({ trigger, enabled, updateEnabled, openDow
             // load model using the model name retrieved
             await window['node-llama-cpp'].loadModel(stored_model['model-name'])
         }
+        updateState();
     }
 
     useEffect(()=>{

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import AwsSettings from "./AwsSettings";
 import { getPlatformSettings, updatePlatformSettings } from "../../utils/general_settings";
 import ModelSettings from "./ModelSettings";
@@ -10,7 +10,10 @@ import LlamaSettings from "./LlamaSettings";
 export default function Settings({ complete }) {
 
     const [enabled_platform, setEnabledPlatform] = useState(getPlatformSettings().enabled_platform)
-    const [ saveSettingTrigger, toggleSaveSetting ] = useState(false);
+    const [saveSettingTrigger, toggleSaveSetting] = useState(false);
+    
+    const setting_sections = useRef(5);
+    const [updatedSettings, setUpdatedSettings] = useState(0);
 
     // Download model dialog
     const [download_title, setDownloadTitle] = useState('');
@@ -26,7 +29,6 @@ export default function Settings({ complete }) {
     function save() {
         toggleSaveSetting(true);
         setTimeout(()=>toggleSaveSetting(false), 1000);
-        complete && complete();
     }
 
     async function openDownloadProtector(title, description, downloader) {
@@ -42,32 +44,49 @@ export default function Settings({ complete }) {
         })
     }
 
+    function updateSaveState() {
+        setUpdatedSettings((prev)=>prev+1)
+    }
+
+    useEffect(()=>{
+        if(updatedSettings === setting_sections.current) {
+            complete && complete();
+            setUpdatedSettings(0);
+        }
+    // eslint-disable-next-line
+    }, [updatedSettings])
+
     return (
         <div className="setting-page">
             <ModelSettings 
                 trigger={saveSettingTrigger}
+                updateState={updateSaveState}
             />
             <LlamaSettings 
                 trigger={saveSettingTrigger}
                 enabled={enabled_platform === "Llama"}
                 updateEnabled={set=>updatePlatform(set ? "Llama" : null)}
                 openDownloadProtector={openDownloadProtector}
+                updateState={updateSaveState}
             />
             <WllamaSettings 
                 trigger={saveSettingTrigger}
                 enabled={enabled_platform === "Wllama"}
                 updateEnabled={set=>updatePlatform(set ? "Wllama" : null)}
                 openDownloadProtector={openDownloadProtector}
+                updateState={updateSaveState}
             />
             <AwsSettings 
                 trigger={saveSettingTrigger}
                 enabled={enabled_platform === 'AWS'}
                 updateEnabled={set=>updatePlatform(set ? "AWS" : null)}
+                updateState={updateSaveState}
             />
             <OpenaiSettings 
                 trigger={saveSettingTrigger}
                 enabled={enabled_platform === 'OpenAI'}
                 updateEnabled={set=>updatePlatform(set ? "OpenAI" : null)}
+                updateState={updateSaveState}
             />
             <div className={`save-settings clickable${saveSettingTrigger?" saved":""}`} onClick={save}>
                 { saveSettingTrigger ? "Settings Saved!" : "Save Settings" }

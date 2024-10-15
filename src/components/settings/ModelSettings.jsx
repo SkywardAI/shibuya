@@ -3,7 +3,7 @@ import ScrollBarComponent from "./components/ScrollBarComponent";
 import SettingSection from "./SettingSection";
 import { getModelSettings, updateModelSettings } from "../../utils/general_settings";
 
-export default function ModelSettings({ trigger }) {
+export default function ModelSettings({ trigger, updateState }) {
 
     const [max_tokens, setMaxTokens] = useState(0);
     const [top_p, setTopP] = useState(0);
@@ -13,6 +13,7 @@ export default function ModelSettings({ trigger }) {
         updateModelSettings({
             max_tokens, top_p, temperature
         })
+        updateState()
     }
 
     useEffect(()=>{
