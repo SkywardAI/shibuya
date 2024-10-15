@@ -1,4 +1,4 @@
-const { createWriteStream } = require("fs");
+const { createWriteStream, existsSync, statSync } = require("fs");
 const path = require("path");
 
 let llama, getLlama, LlamaChatSession, current_model;
@@ -150,6 +150,17 @@ function downloadModel(url, cb=null) {
     return new Promise(resolve=>{
         (async function() {
             const model_name = url.split('/').pop();
+            const model_save_path = path.join(model_path, model_name)
+
+            if(existsSync(model_save_path)) {
+                cb && cb(100, true);
+                const size = statSync(model_save_path).size
+                resolve({
+                    model_name, url, finish_time: Date.now(),
+                    size
+                })
+                return;
+            }
         
             const download_req = await fetch(url);
             if(!download_req.ok) {
@@ -166,7 +177,7 @@ function downloadModel(url, cb=null) {
             }
             let downloaded = 0;
 
-            const write_stream = createWriteStream(path.join(model_path, model_name))
+            const write_stream = createWriteStream(model_save_path)
             const middle_write_stream = new WritableStream({
                 write(chunk) {
                     write_stream.write(chunk);
