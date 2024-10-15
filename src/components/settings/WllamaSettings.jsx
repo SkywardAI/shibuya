@@ -6,7 +6,7 @@ import { getPlatformSettings, updatePlatformSettings } from "../../utils/general
 import { downloadModel, isModelDownloaded, loadModel, loadModelSamplingSettings } from "../../utils/workers/wllama-worker";
 import useIDB from "../../utils/idb";
 
-export default function WllamaSettings({ trigger, enabled, updateEnabled, openDownloadProtector }) {
+export default function WllamaSettings({ trigger, enabled, updateEnabled, openDownloadProtector, updateState }) {
 
     const [ threads, setThreads ] = useState(1);
     const [ batch_size, setBatchSize ] = useState(256);
@@ -45,6 +45,7 @@ export default function WllamaSettings({ trigger, enabled, updateEnabled, openDo
 
             await loadModel('completion');
         }
+        updateState();
     }
 
     useEffect(()=>{
