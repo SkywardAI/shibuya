@@ -17,7 +17,7 @@ win:
 
 mac:
   target:
-    - dir
+    - default
 
 linux:
   target:
