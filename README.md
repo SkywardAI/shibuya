@@ -26,10 +26,22 @@ pnpm run electron
 One on each terminal, so they won't conflict with each other.
 
 ## Distributions
-There are some distribution files in releast page. Please download and run `SkywardaiChat-vX.Y.Z.(AppImage|dmg|exe)` according to your platform.  
+There are some distribution files in releast page. Please download and run `SkywardaiChat-vX.Y.Z.(AppImage|app|exe)` according to your platform.  
 Currently there's no `Code Signing` in our distributions, so your defender might block you from using the application. Please allow install to use the distributions.  
-  
+#### Mac
+You might want to bypass the Gatekeeper to run you application
+#### Windows
+To install the application, Windows Defender SmartScreen might block you, please select **More info** and choose **Run anyway**.
+#### Linux
+You can run the `.AppImage` file directly, but you might want to give it execute permissions and disable sanbox to run it normally.
+```sh
+# Assume we have the application <application-name>.AppImage
+chmod +x <application-name>.AppImage
+<application-name>.AppImage --no-sandbox
+```
+
 > Sensitive informations are stored only at your own machine. No one can see them.
 
 ## References
 * [Wllama](https://github.com/ngxson/wllama)
+* [node-llama-cpp](https://github.com/withcatai/node-llama-cpp)
