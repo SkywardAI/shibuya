@@ -26,10 +26,10 @@ pnpm run electron
 One on each terminal, so they won't conflict with each other.
 
 ## Distributions
-There are some distribution files in releast page. Please download and run `SkywardaiChat-vX.Y.Z.(AppImage|app|exe)` according to your platform.  
+There are some distribution files in releast page. Please download and run `SkywardaiChat-vX.Y.Z.(AppImage|dmg|-mac.zip|exe)` according to your platform.  
 Currently there's no `Code Signing` in our distributions, so your defender might block you from using the application. Please allow install to use the distributions.  
 #### Mac
-You might want to bypass the Gatekeeper to run you application
+Extract from dmg might say they are broked, it's because it's been blocked by the Gatekeeper. You can download the `-mac.zip` file and extract `.app` from it, and run the `.app` file directly to give you chance bypassing the Gatekeeper.
 #### Windows
 To install the application, Windows Defender SmartScreen might block you, please select **More info** and choose **Run anyway**.
 #### Linux
