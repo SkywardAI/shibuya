@@ -137,6 +137,7 @@ export default function Chat() {
     }, [chat])
 
     return (
+        settings.current ?
         <div className="chat">
             <Tickets 
                 selectChat={selectChat} current_chat={chat} 
@@ -155,6 +156,7 @@ export default function Chat() {
                 resetRequestDelete={resetRequestDelete} 
                 conv_to_delete={conv_to_delete}
             />
-        </div>
+        </div> :
+        <></>
     )
 }
