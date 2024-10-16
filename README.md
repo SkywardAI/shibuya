@@ -26,14 +26,15 @@ pnpm run electron
 One on each terminal, so they won't conflict with each other.
 
 ## Distributions
-There are some distribution files in releast page. Please download and run `SkywardaiChat-vX.Y.Z.(AppImage|dmg|-mac.zip|exe)` according to your platform.  
+There are some distribution files in releast page. Please download and run `Shibuya-vX.Y.Z.(AppImage|zip|exe)` according to your platform.  
 Currently there's no `Code Signing` in our distributions, so your defender might block you from using the application. Please allow install to use the distributions.  
-#### Mac
-Extract from dmg might say they are broked, it's because it's been blocked by the Gatekeeper. You can download the `-mac.zip` file and extract `.app` from it, and run the `.app` file directly to give you chance bypassing the Gatekeeper.
-#### Windows
+#### Mac (.zip)
+Extract from dmg might say they are broked, it's because it's been blocked by the Gatekeeper. You can download the `.zip` file and extract `.app` from it, and run the `.app` file directly to give you chance bypassing the Gatekeeper.
+#### Windows (.exe)
 To install the application, Windows Defender SmartScreen might block you, please select **More info** and choose **Run anyway**.
-#### Linux
-You can run the `.AppImage` file directly, but you might want to give it execute permissions and disable sanbox to run it normally.
+#### Linux (.AppImage)
+You can download and run the `.AppImage` file directly by double-clicking the binary on a linux desktop destribution.  
+If you are using terminal, you might want to give it execute permissions and disable sanbox to run it normally.
 ```sh
 # Assume we have the application <application-name>.AppImage
 chmod +x <application-name>.AppImage
