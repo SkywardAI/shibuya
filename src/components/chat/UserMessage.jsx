@@ -1,14 +1,16 @@
-import { useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { Paperclip } from "react-bootstrap-icons";
 import { FileTextFill } from "react-bootstrap-icons";
 import { FileImageFill } from "react-bootstrap-icons";
 import { StopCircleFill } from "react-bootstrap-icons";
 import { Send } from "react-bootstrap-icons";
 
-export default function UserMessage({ enable_send, file_available, abort_completion, send }) {
+export default function UserMessage({ uid, enable_send, file_available, abort_completion, send }) {
 
     const [message, setMessage] = useState('');
     const [files, setFiles] = useState([]);
+
+    const inputRef = useRef(null);
 
     function submitMessage(event) {
         event.preventDefault();
@@ -16,6 +18,13 @@ export default function UserMessage({ enable_send, file_available, abort_complet
         setMessage('');
         setFiles('');
     }
+
+    // update when uid changed, means we entered a new conversation
+    useEffect(()=>{
+        if(uid && inputRef.current) {
+            inputRef.current.focus();
+        }
+    }, [uid])
 
     return (
         <form className="send-message-form" onSubmit={submitMessage}>
@@ -35,7 +44,7 @@ export default function UserMessage({ enable_send, file_available, abort_complet
                             onChange={evt=>setFiles(evt.target.files.length ? evt.target.files[0] : null)} />
                     </div>
                 }
-                <input type="text" value={message} onChange={evt=>setMessage(evt.target.value)}/>
+                <input type="text" ref={inputRef} value={message} onChange={evt=>setMessage(evt.target.value)}/>
                 <div className="button-container">
                     { 
                         enable_send ? 
