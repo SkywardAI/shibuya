@@ -4,7 +4,7 @@
     "name": "Bohan Cheng",
     "email": "cbh778899@outlook.com"
   },
-  "version": "0.2.3",
+  "version": "0.2.4",
   "main": "electron.js",
   "license": "Apache-2.0",
   "scripts": {
