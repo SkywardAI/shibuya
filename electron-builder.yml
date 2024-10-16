@@ -12,14 +12,17 @@ files:
 win:
   target:
     - nsis
+  icon: build/icons/icon.ico  # Set Windows icon
 
 mac:
   target:
     - zip
+  icon: build/icons/icon.icns  # Set macOS icon
 
 linux:
   target:
     - AppImage
+  icon: build/icons/icon.png  # Set Linux icon
 
 nsis:
   oneClick: false  # Whether the installer is one-click
