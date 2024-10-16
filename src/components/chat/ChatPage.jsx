@@ -13,7 +13,7 @@ export default function ChatPage({
                 <TitleBar current_title={chat.title} updateTitle={updateTitle} />
                 <Bubbles conversation={chat_history} pending_message={pending_message} />
                 <UserMessage
-                    enable_send={pending_message === null}
+                    uid={chat.uid} enable_send={pending_message === null}
                     file_available={!/^(OpenAI|Wllama|Llama)$/.test(chat.platform)}
                     send={sendMessage} abort_completion={abort}
                 /></>:
