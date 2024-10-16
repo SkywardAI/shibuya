@@ -24,7 +24,7 @@ function createWindow() {
     if(app.isPackaged) {
         // eslint-disable-next-line
         win.loadFile(path.join(__dirname, 'dist/index.html'))
-        // Menu.setApplicationMenu(null);
+        Menu.setApplicationMenu(null);
     } else {
         win.loadURL("http://localhost:3000");
     }
