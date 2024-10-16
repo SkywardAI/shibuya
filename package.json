@@ -6,6 +6,7 @@
   },
   "version": "0.2.2",
   "main": "electron.js",
+  "license": "Apache-2.0",
   "scripts": {
     "dev": "npm run start & npm run electron",
     "start": "vite",
