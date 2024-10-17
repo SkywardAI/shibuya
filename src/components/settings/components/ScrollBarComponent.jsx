@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react"
 
-export default function ScrollBarComponent({ cb, value, disabled, title, description, min, max, times_10, step }) {
+export default function ScrollBarComponent({ cb, value, disabled, title, description, min, max, times_10, step, special }) {
 
     const [scrollValue, setScrollValue] = useState((times_10 ? 10 : 1) * value);
     const [textValue, setTextValue] = useState(value);
 
     function checkValue(v) {
         v = v || +textValue;
-        return v <= max && v >= min;
+        return (v <= max && v >= min) || v === special;
     }
 
     function setValue(value, is_scroll = false) {
