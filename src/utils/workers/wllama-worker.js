@@ -35,10 +35,11 @@ export function loadModelSamplingSettings() {
         n_threads: wllama_threads, 
         n_batch: wllama_batch_size, 
         n_ctx: wllama_context_length,
-        nPredict: max_tokens,
         temp: temperature,
         top_p
     }
+
+    if(max_tokens) model_sampling_settings.nPredict = max_tokens;
 }
 loadModelSamplingSettings();
 

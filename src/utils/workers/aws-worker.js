@@ -125,13 +125,17 @@ export async function chatCompletions(messages, cb = null) {
         }
     })
 
-    const { max_tokens:maxTokens, top_p:topP, temperature } = getModelSettings();
+    const { max_tokens, top_p:topP, temperature } = getModelSettings();
     const input = {
         modelId: aws_model_id,
         messages: normal_messages,
         inferenceConfig: {
-            maxTokens, temperature, topP
+            temperature, topP
         }
+    }
+
+    if(max_tokens) {
+        input.inferenceConfig.maxTokens = max_tokens
     }
 
     if(system.length) input.system = system;

@@ -106,10 +106,10 @@ async function chatCompletions(latest_message, cb=null) {
     const options = {
         signal: stop_signal.signal,
         stopOnAbortSignal: true,
-        maxTokens: max_tokens,
         topP: top_p,
         temperature
     }
+    if(max_tokens) options.maxTokens = max_tokens
     let resp_text = ''
     if(cb) options.onTextChunk = chunk => {
         resp_text += chunk;

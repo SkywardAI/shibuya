@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import ScrollBarComponent from "./components/ScrollBarComponent";
 import SettingSection from "./SettingSection";
 import { getModelSettings, updateModelSettings } from "../../utils/general_settings";
+import { MIN_TOKENS } from "../../utils/types";
 
 export default function ModelSettings({ trigger, updateState }) {
 
@@ -10,8 +11,10 @@ export default function ModelSettings({ trigger, updateState }) {
     const [temperature, setTemperature] = useState(0);
 
     function saveSettings() {
+        let validate_max_token = max_tokens;
+        if(max_tokens < MIN_TOKENS && max_tokens !== 0) validate_max_token = MIN_TOKENS;
         updateModelSettings({
-            max_tokens, top_p, temperature
+            max_tokens: validate_max_token, top_p, temperature
         })
         updateState()
     }
@@ -32,7 +35,7 @@ export default function ModelSettings({ trigger, updateState }) {
         <SettingSection title={'General Model Settings'}>
             <ScrollBarComponent
                 title={'Set Max Tokens'}
-                description={'The max tokens AI can generate'}
+                description={'The max tokens AI can generate, if set to 0 there will be no limitations.'}
                 value={max_tokens} cb={setMaxTokens}
                 max={2048} min={32}
             />
