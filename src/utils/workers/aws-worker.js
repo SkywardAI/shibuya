@@ -226,6 +226,5 @@ export async function formator(messages, files = []) {
             }
         }
     }
-    console.log(common_messages)
     return [...common_messages, ...system_messages]
 }
