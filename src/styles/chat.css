@@ -248,10 +248,19 @@
     padding: 10px;
     overflow: auto;
 }
-.chat > .conversation-main > .bubbles > .bubble :not(pre) code {
+
+.chat > .conversation-main > .bubbles > .bubble code {
     padding: 0px 5px;
     background-color: rgb(227, 227, 227);
     border-radius: 5px;
+}
+
+.chat > .conversation-main > .bubbles > .bubble.user code {
+    background-color: rgb(22, 113, 203);
+}
+
+.chat > .conversation-main > .bubbles > .bubble pre code {
+    background-color: unset;
 }
 
 @keyframes dotAnimation {
@@ -290,7 +299,7 @@ input[type="text"] {
     height: 100%;
     position: relative;
     border: none;
-    padding: 0px var(--elem-size) 0px 10px;
+    padding: 0px calc(var(--elem-size) + 5px) 0px 10px;
 }
 
 .chat > .conversation-main > .send-message-form > .input-container >

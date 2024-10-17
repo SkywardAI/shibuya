@@ -125,13 +125,17 @@ export async function chatCompletions(messages, cb = null) {
         }
     })
 
-    const { max_tokens:maxTokens, top_p:topP, temperature } = getModelSettings();
+    const { max_tokens, top_p:topP, temperature } = getModelSettings();
     const input = {
         modelId: aws_model_id,
         messages: normal_messages,
         inferenceConfig: {
-            maxTokens, temperature, topP
+            temperature, topP
         }
+    }
+
+    if(max_tokens) {
+        input.inferenceConfig.maxTokens = max_tokens
     }
 
     if(system.length) input.system = system;
@@ -195,9 +199,9 @@ export async function formator(messages, files = []) {
     if(files.length) {
         for(const file of files) {
             const file_info = file.name.split('.')
-            const extension = file_info.pop();
+            const extension = file_info.pop().toLowerCase();
             const filename = file_info.join('_');
-            const bytes = await file.arrayBuffer()
+            const bytes = new Uint8Array(await file.arrayBuffer())
 
             if(/^image\/.+/.test(file.type)) {
                 common_messages[common_messages.length - 1].content.push(
@@ -209,11 +213,12 @@ export async function formator(messages, files = []) {
                     }
                 )
             } else {
+                const is_valid_format = /^(docx|csv|html|txt|pdf|md|doc|xlsx|xls)$/.test(extension)
                 common_messages[common_messages.length - 1].content.push(
                     {
                         document: {
-                            name: filename,
-                            format: extension,
+                            name: filename + (is_valid_format ? '' : `_${extension}`),
+                            format: is_valid_format ? extension : 'txt' ,
                             source: { bytes  }
                         }
                     }

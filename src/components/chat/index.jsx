@@ -1,11 +1,11 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Tickets from "./Tickets";
 // import Conversation from "./Conversation";
 import useIDB from "../../utils/idb";
 import DeleteConfirm from "./DeleteConfirm";
 import ChatPage from "./ChatPage";
-import { useRef } from "react";
 import { getCompletionFunctions } from "../../utils/workers";
+import { getPlatformSettings } from "../../utils/general_settings";
 
 export default function Chat() {
 
@@ -20,8 +20,8 @@ export default function Chat() {
     const [pending_message, setPendingMessage] = useState(null);
 
     const idb = useIDB();
-    // const settings = useRef(getCompletionFunctions());
-    const settings = useRef(getCompletionFunctions());
+    const platform = useRef(getPlatformSettings().enabled_platform);
+    const [session_setting, setSessionSetting] = useState({});
 
     async function sendMessage(message, files) {
         // save user messages
@@ -59,11 +59,11 @@ export default function Chat() {
 
         // start inference
         const send_message = (
-            settings.current.formator ? 
-            await settings.current.formator(history_save, files) : history_save
+            session_setting.formator ? 
+            await session_setting.formator(history_save, files) : history_save
         )
         setPendingMessage('')
-        await settings.current.completions(send_message, cb)
+        await session_setting.completions(send_message, cb)
     }
 
     function updateChatClient(client) {
@@ -127,27 +127,29 @@ export default function Chat() {
                 message_history = messages;
                 setChatHistory(messages)
             }).finally(()=>{
-                const client = settings.current.initClient(chat.client || null, message_history)
+                const ss = getCompletionFunctions(chat.platform);
+                const client = ss.initClient(chat.client || null, message_history)
                 if(!chat.client) {
                     updateChatClient(client)
                 }
+                setSessionSetting(ss);
             })
         }
     // eslint-disable-next-line
     }, [chat])
 
     return (
-        settings.current ?
+        platform.current ?
         <div className="chat">
             <Tickets 
                 selectChat={selectChat} current_chat={chat} 
                 setHistory={setTickets} history={tickets} 
-                deleteHistory={requestDelete} platform={settings.current.platform}
+                deleteHistory={requestDelete} platform={platform.current}
             />
             <ChatPage 
                 updateTitle={updateTitle}
                 chat={chat} chat_history={chat_history}
-                pending_message={pending_message} abort={settings.current.abort}
+                pending_message={pending_message} abort={session_setting.abort}
                 sendMessage={sendMessage}
             />
             <DeleteConfirm 

@@ -16,7 +16,7 @@ export default function UserMessage({ uid, enable_send, file_available, abort_co
         event.preventDefault();
         send(message, files);
         setMessage('');
-        setFiles('');
+        setFiles([]);
     }
 
     // update when uid changed, means we entered a new conversation
@@ -41,7 +41,7 @@ export default function UserMessage({ uid, enable_send, file_available, abort_co
                         <input 
                             type="file" className="clickable" 
                             title={files.length ? `Append file ${files.map(e=>e.name).join('; ')}` : "Select file to append"}
-                            onChange={evt=>setFiles(evt.target.files.length ? evt.target.files[0] : null)} />
+                            onChange={evt=>setFiles([...evt.target.files])} />
                     </div>
                 }
                 <input type="text" ref={inputRef} value={message} onChange={evt=>setMessage(evt.target.value)}/>

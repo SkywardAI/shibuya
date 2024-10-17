@@ -34,7 +34,7 @@ const MODEL_SETTINGS_KEY = 'general-model-settings'
  * @property {Number} temperature
  */
 const DEFAULT_MODEL_SETTINGS = {
-    max_tokens: 128,
+    max_tokens: 1024,
     top_p: 0.9,
     temperature: 0.7
 }
