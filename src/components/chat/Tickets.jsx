@@ -21,7 +21,8 @@ export default function Tickets({selectChat, current_chat, history, setHistory, 
                 createdAt: timestamp,
                 updatedAt: timestamp,
                 uid: genRandomID(),
-                platform
+                platform,
+                'system-instruction': ''
             }
         )
         const new_conv_info = await idb.getByID('chat-history', conv_id);
