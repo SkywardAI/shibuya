@@ -119,7 +119,7 @@ export async function chatCompletions(messages, cb = null) {
         const { role } = message;
         
         if(role === 'system') {
-            system.push(message);
+            system.push(message.content[0]);
         } else {
             normal_messages.push(message);
         }

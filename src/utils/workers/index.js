@@ -17,7 +17,8 @@ import { chatCompletions as OpenaiCompletions, abortCompletion as OpenaiAbort, s
  * @returns {CompletionFunctions}
  */
 export function getCompletionFunctions(platform = null) {
-    platform = platform || getPlatformSettings().enabled_platform;
+    const { enabled_platform, llama_reset_everytime } = getPlatformSettings();
+    platform = platform || enabled_platform;
     
     switch(platform) {
         case 'AWS':
@@ -34,7 +35,7 @@ export function getCompletionFunctions(platform = null) {
                 initClient: OpenAISetClient
             }
         case 'Llama':
-            window['node-llama-cpp'].updateModelSettings(getModelSettings())
+            window['node-llama-cpp'].updateModelSettings({...getModelSettings(), llama_reset_everytime})
             return { 
                 completions: window['node-llama-cpp'].chatCompletions, 
                 abort: window['node-llama-cpp'].abortCompletion, 

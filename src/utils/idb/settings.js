@@ -51,4 +51,11 @@ export const versions = [
             ]
         }
     },
+    {
+        'chat-history': {
+            columns: [
+                { name: 'system-instruction' },
+            ]
+        }
+    }
 ]

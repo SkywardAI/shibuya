@@ -4,13 +4,18 @@ import UserMessage from "./UserMessage";
 
 export default function ChatPage({
     chat, chat_history, updateTitle,
-    sendMessage, pending_message, abort
+    sendMessage, pending_message, abort,
+    updateSystemInstruction
 }) {
 
     return (
         <>
             <div className="conversation-main">{chat.uid?<>
-                <TitleBar current_title={chat.title} updateTitle={updateTitle} />
+                <TitleBar 
+                    current_title={chat.title} updateTitle={updateTitle} 
+                    updateSystemInstruction={updateSystemInstruction}
+                    current_instruction={chat['system-instruction']}
+                />
                 <Bubbles conversation={chat_history} pending_message={pending_message} />
                 <UserMessage
                     uid={chat.uid} enable_send={pending_message === null}

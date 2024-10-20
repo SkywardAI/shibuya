@@ -46,7 +46,11 @@ export default function ScrollBarComponent({ cb, value, disabled, title, descrip
                     min={(times_10 ? 10 : 1) * min} max={(times_10 ? 10 : 1) * max} 
                     disabled={disabled} 
                 />
-                <input type="text" value={textValue} onInput={evt=>setValue(evt.target.value, false)} />
+                <input 
+                    type="text" value={textValue} 
+                    onInput={evt=>setValue(evt.target.value, false)}
+                    onClick={evt=>evt.target.select()}
+                />
             </div>
         </div>
     )

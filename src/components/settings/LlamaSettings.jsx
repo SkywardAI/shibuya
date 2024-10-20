@@ -9,6 +9,7 @@ import { DEFAULT_LLAMA_CPP_MODEL_URL } from "../../utils/types";
 export default function LlamaSettings({ trigger, enabled, updateEnabled, openDownloadProtector, updateState }) {
 
     const [model_download_link, setModelDownloadLink] = useState('');
+    const [reset_everytime, setResetEveryTime] = useState(false);
     const idb = useIDB();
 
     async function saveSettings() {
@@ -17,7 +18,8 @@ export default function LlamaSettings({ trigger, enabled, updateEnabled, openDow
         if(url !== model_download_link) setModelDownloadLink(url)
 
         updatePlatformSettings({
-            llama_model_url: url
+            llama_model_url: url,
+            llama_reset_everytime: reset_everytime
         })
         if(enabled) {
             // check if model with this url already downloaded
@@ -53,8 +55,9 @@ export default function LlamaSettings({ trigger, enabled, updateEnabled, openDow
     }, [trigger])
 
     useEffect(()=>{
-        const { llama_model_url } = getPlatformSettings();
+        const { llama_model_url, llama_reset_everytime } = getPlatformSettings();
         setModelDownloadLink(llama_model_url || DEFAULT_LLAMA_CPP_MODEL_URL);
+        setResetEveryTime(llama_reset_everytime);
     }, [])
 
     return (
@@ -69,6 +72,11 @@ export default function LlamaSettings({ trigger, enabled, updateEnabled, openDow
                 description={"Only models with extension .gguf can be used. Please make sure it can be run on your own machine."}
                 placeholder={"Default model is Microsoft Phi-3"}
                 value={model_download_link} cb={setModelDownloadLink}
+            />
+            <TrueFalseComponent 
+                title={"Reset conversation when send new message"}
+                description={"Reset the conversation, only keeps the latest message and the system instruction, this is useful for many one-shot operations."}
+                value={reset_everytime} cb={setResetEveryTime}
             />
         </SettingSection>
     )

@@ -15,7 +15,7 @@ export default function Bubbles({ conversation, pending_message }) {
 
     return (
         <div className="bubbles" ref={mainRef}>
-            { conversation.map(({role, content}, idx) => {
+            { conversation.filter(({role})=>/^(user|assistant)$/.test(role)).map(({role, content}, idx) => {
                 return (
                     <ConversationBubble 
                         key={`conversation-history-${idx}`} 

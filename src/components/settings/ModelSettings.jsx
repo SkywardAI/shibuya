@@ -12,7 +12,6 @@ export default function ModelSettings({ trigger, updateState }) {
 
     function saveSettings() {
         let validate_max_token = max_tokens;
-        console.log(max_tokens)
         if(max_tokens < MIN_TOKENS && max_tokens !== 0) validate_max_token = MIN_TOKENS;
         updateModelSettings({
             max_tokens: validate_max_token, top_p, temperature

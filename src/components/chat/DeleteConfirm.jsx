@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useRef } from "react";
 
-export default function DeleteConfirm({showConfirm, deleteHistory, resetRequestDelete, conv_to_delete}) {
+export default function DeleteConfirm({showConfirm, closeDialog, deleteHistory, resetRequestDelete, conv_to_delete}) {
     const dialogRef = useRef(null);
 
     useEffect(()=>{
@@ -12,7 +12,7 @@ export default function DeleteConfirm({showConfirm, deleteHistory, resetRequestD
     }, [showConfirm])
 
     return (
-        <dialog ref={dialogRef}>
+        <dialog ref={dialogRef} onClose={closeDialog}>
             <div>
                 Delete <strong>{conv_to_delete && conv_to_delete.title}</strong>?
             </div>
