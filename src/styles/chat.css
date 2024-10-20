@@ -157,11 +157,25 @@
     --elem-height: calc(var(--title-bar-height) - 14px);
 }
 
+.chat > .conversation-main > .title-bar > .normal-mode {
+    display: flex;
+    align-items: center;
+}
+
 .chat > .conversation-main > .title-bar .display-title {
     width: fit-content;
     height: 100%;
     display: flex;
     align-items: center;
+    flex-basis: calc(100% - 50px);
+}
+
+.chat > .conversation-main > .title-bar > .normal-mode > .icon.clickable {
+    --size: 17px;
+    width: var(--size);
+    height: var(--size);
+    flex-basis: var(--size);
+    margin: auto;
 }
 
 .chat > .conversation-main > .title-bar .display-title > .edit-icon {
@@ -170,6 +184,43 @@
 
 .chat > .conversation-main > .title-bar > form {
     display: flex;
+}
+
+dialog.system-instruction {
+    border: none;
+    border-radius: 20px;
+    padding: 20px 30px;
+    background-color: white;
+}
+
+dialog.system-instruction > form {
+    display: block;
+    position: relative;
+}
+
+.system-instruction > form > .title {
+    font-size: 18px;
+}
+
+.system-instruction > form > input[type="text"] {
+    width: 100%;
+    height: 40px;
+    border: 1px solid gray;
+    border-radius: 7px;
+    padding: 0px 10px;
+    margin-top: 10px;
+}
+
+
+.system-instruction > form > .btn {
+    width: fit-content;
+    text-align: center;
+    margin: auto;
+    margin-top: 10px;
+    color: rgb(70, 70, 70);
+}
+.system-instruction > form > .btn:hover {
+    color: black;
 }
 
 .chat > .conversation-main > .title-bar .edit-title {
@@ -182,7 +233,7 @@
     height: var(--elem-height);
 }
 
-.chat > .conversation-main > .title-bar .btn {
+.chat > .conversation-main > .title-bar > .edit-mode > .btn {
     height: var(--elem-height);
     width: var(--elem-height);
     margin-left: 15px;
