@@ -94,18 +94,61 @@ export default function Chat() {
         resetRequestDelete();
     }
 
-    async function updateTitle(title) {
-        await idb.updateOne("chat-history", {title}, [{uid: chat.uid}])
+    async function attributeUpdater(name, value) {
+        await idb.updateOne("chat-history", {[name]: value}, [{uid: chat.uid}])
 
         selectChat({
-            ...chat, title: title
+            ...chat, [name]: value
         })
 
         let history_cp = [...tickets];
         history_cp[
             history_cp.findIndex(e=>e.uid === chat.uid)
-        ].title = title;
+        ][name] = value;
         setTickets(history_cp);
+    }
+
+    async function updateTitle(title) {
+        await attributeUpdater('title', title)
+    }
+
+    async function updateSystemInstruction(instruction) {
+        if(!chat['system-instruction']) {
+            await idb.insert('messages', {
+                role: 'system',
+                content: instruction,
+                'history-uid': chat.uid,
+                createdAt: Date.now()
+            })
+        } else {
+            await idb.updateOne('messages', {
+                content: instruction
+            }, [{'history-uid': chat.uid, role: 'system'}])
+        }
+        switchConversation();
+        await attributeUpdater('system-instruction', instruction)
+    }
+
+    function switchConversation() {
+        let message_history = null;
+        // update messages
+        idb.getAll(
+            'messages', 
+            { 
+                where: [{'history-uid': chat.uid}],
+                select: ['role', 'content']
+            }
+        ).then(messages=>{
+            message_history = messages;
+            setChatHistory(messages)
+        }).finally(()=>{
+            const ss = getCompletionFunctions(chat.platform);
+            const client = ss.initClient(chat.client || null, message_history)
+            if(!chat.client) {
+                updateChatClient(client)
+            }
+            setSessionSetting(ss);
+        })
     }
 
     useEffect(()=>{
@@ -115,25 +158,7 @@ export default function Chat() {
     useEffect(()=>{
         if(chat.uid && chat.uid !== current_uid) {
             setCurrentUid(chat.uid);
-            let message_history = null;
-            // update messages
-            idb.getAll(
-                'messages', 
-                { 
-                    where: [{'history-uid': chat.uid}],
-                    select: ['role', 'content']
-                }
-            ).then(messages=>{
-                message_history = messages;
-                setChatHistory(messages)
-            }).finally(()=>{
-                const ss = getCompletionFunctions(chat.platform);
-                const client = ss.initClient(chat.client || null, message_history)
-                if(!chat.client) {
-                    updateChatClient(client)
-                }
-                setSessionSetting(ss);
-            })
+            switchConversation();
         }
     // eslint-disable-next-line
     }, [chat])
@@ -150,10 +175,11 @@ export default function Chat() {
                 updateTitle={updateTitle}
                 chat={chat} chat_history={chat_history}
                 pending_message={pending_message} abort={session_setting.abort}
-                sendMessage={sendMessage}
+                sendMessage={sendMessage} updateSystemInstruction={updateSystemInstruction}
             />
             <DeleteConfirm 
                 showConfirm={show_delete_confirm} 
+                closeDialog={()=>toggleConfirm(false)}
                 deleteHistory={deleteHistory} 
                 resetRequestDelete={resetRequestDelete} 
                 conv_to_delete={conv_to_delete}
