@@ -99,10 +99,16 @@ function updateModelSettings(settings) {
  * @returns {Promise<String>} the response text
  */
 async function chatCompletions(latest_message, cb=null) {
-    if(!llama_session) await loadModel();
+    const {max_tokens, top_p, temperature, llama_reset_everytime} = model_settings;
+    if(!llama_session) {
+        cb && cb('> **ERROR: MODEL NOT LOADED**', true);
+        return '';
+    }
     latest_message = findMessageText(latest_message);
+    if(llama_reset_everytime) {
+        setClient(null, llama_session.getChatHistory().filter(({type})=>type === 'system'))
+    }
 
-    const {max_tokens, top_p, temperature} = model_settings;
 
     stop_signal = new AbortController();
     const options = {
