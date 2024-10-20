@@ -70,9 +70,11 @@ function findMessageText(message) {
     if(typeof message === "string") return message;
     else if(typeof message === "object") {
         if(Array.isArray(message)) {
-            message = message.pop();
-            if(typeof message === 'object' && message.content) {
-                return message.content;
+            while(message.length) {
+                message = message.pop();
+                if(typeof message === 'object' && message.role && message.role === 'user' && message.content) {
+                    return message.content;
+                }
             }
         }
     }
