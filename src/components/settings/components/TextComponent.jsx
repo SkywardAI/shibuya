@@ -7,7 +7,7 @@ export default function TextComponent({ cb, value, disabled, title, description,
                 type={type || "text"} value={value}
                 disabled={disabled}  placeholder={placeholder || ''}
                 onInput={(evt)=>cb(evt.target.value)} 
-                className="main-part"
+                className="main-part" onClick={evt=>evt.target.select()}
             />
         </div>
     )
