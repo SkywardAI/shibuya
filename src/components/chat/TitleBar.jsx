@@ -1,9 +1,15 @@
 import { useEffect, useRef, useState } from "react";
-import { ChatRightText, PencilFill, Save } from "react-bootstrap-icons";
-import { XCircle } from "react-bootstrap-icons";
-import { CheckCircle } from "react-bootstrap-icons";
+import { 
+    ChatRightText, PencilFill, 
+    Save, ChatSquareText, Braces,
+    XCircle, CheckCircle 
+} from "react-bootstrap-icons";
 
-export default function TitleBar({current_title, updateTitle, current_instruction, updateSystemInstruction}) {
+export default function TitleBar({
+    current_title, updateTitle,
+    current_instruction, updateSystemInstruction,
+    saveHistory
+}) {
     const [title, setTitle] = useState(current_title);
     const [is_editing, toggleEditTitle] = useState(false);
     const [system_instruction, setSystemInstruction] = useState(current_instruction || '');
@@ -11,6 +17,7 @@ export default function TitleBar({current_title, updateTitle, current_instructio
 
     const inputRef = useRef(null);
     const systemInstructionDialogRef = useRef();
+    const exportFormatDialogRef = useRef();
 
     function submitUpdateTitle() {
         if(is_editing && title !== current_title) {
@@ -25,6 +32,11 @@ export default function TitleBar({current_title, updateTitle, current_instructio
         updateSystemInstruction(system_instruction)
         
         toggleEditSI(false)
+    }
+
+    async function submitSaveHistory(format) {
+        await saveHistory(format);
+        exportFormatDialogRef.current.close();
     }
 
     useEffect(()=>{
@@ -65,7 +77,7 @@ export default function TitleBar({current_title, updateTitle, current_instructio
                         <PencilFill className="edit-icon" />
                     </div>
                     <ChatRightText className="icon clickable" title="Set the system instruction" onClick={()=>toggleEditSI(true)} />
-                    <Save className="icon clickable" title="Save history" />
+                    <Save className="icon clickable" title="Save history" onClick={()=>exportFormatDialogRef.current.showModal()} />
                 </div>
             }
             <dialog className="system-instruction" ref={systemInstructionDialogRef} onClose={()=>toggleEditSI(false)}>
@@ -77,6 +89,23 @@ export default function TitleBar({current_title, updateTitle, current_instructio
                     <div className="btn clickable" onClick={submitSystemInstruction} >Update System Instruction</div>
                     <div className="btn clickable" onClick={()=>toggleEditSI(false)}>Cancel</div>
                 </form>
+            </dialog>
+            <dialog 
+                className="export-format" 
+                onClick={evt=>evt.target.close()}
+                ref={exportFormatDialogRef}
+            >
+                <div className="export-format-main" onClick={evt=>evt.stopPropagation()}>
+                    <div className="title">Please select a format to export</div>
+                    <div className="export-btn clickable" onClick={()=>submitSaveHistory("JSON")}>
+                       <Braces className="icon" />
+                       <div className="text">Export as JSON</div> 
+                    </div>
+                    <div className="export-btn clickable" onClick={()=>submitSaveHistory("Human")}>
+                       <ChatSquareText className="icon" />
+                       <div className="text">Export as Plain Text</div> 
+                    </div>
+                </div>
             </dialog>
         </div>
     )
