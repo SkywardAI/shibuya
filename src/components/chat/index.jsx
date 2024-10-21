@@ -6,6 +6,7 @@ import DeleteConfirm from "./DeleteConfirm";
 import ChatPage from "./ChatPage";
 import { getCompletionFunctions } from "../../utils/workers";
 import { getPlatformSettings } from "../../utils/general_settings";
+import { exportChatHistory } from "../../utils/chat-history-handler";
 
 export default function Chat() {
 
@@ -151,6 +152,12 @@ export default function Chat() {
         })
     }
 
+    async function saveHistory(format) {
+        if(!chat.uid) return;
+        const full_history = await idb.getAll('messages', {where: [{'history-uid': chat.uid}], select: ['role', 'content', 'createdAt']})
+        await exportChatHistory(format, chat, full_history);
+    }
+
     useEffect(()=>{
         conv_to_delete && toggleConfirm(true);
     }, [conv_to_delete])
@@ -172,7 +179,7 @@ export default function Chat() {
                 deleteHistory={requestDelete} platform={platform.current}
             />
             <ChatPage 
-                updateTitle={updateTitle}
+                updateTitle={updateTitle} saveHistory={saveHistory}
                 chat={chat} chat_history={chat_history}
                 pending_message={pending_message} abort={session_setting.abort}
                 sendMessage={sendMessage} updateSystemInstruction={updateSystemInstruction}

@@ -1,5 +1,5 @@
 // eslint-disable-next-line
-const { app, Menu, BrowserWindow, ipcMain } = require('electron');
+const { app, Menu, BrowserWindow, ipcMain, dialog } = require('electron');
 // eslint-disable-next-line
 const path = require('path');
 
@@ -49,4 +49,18 @@ app.whenReady().then(() => {
 
 ipcMain.handle('electron-settings', ()=>{
     return { userDataPath: app.getPath("userData"), isPackaged: app.isPackaged }
+})
+
+ipcMain.handle('os-settings', ()=>{
+    return { 
+        downloads_path: app.getPath("downloads")
+    }
+})
+
+ipcMain.handle('show-save-dialog', async (event, ...args) => {
+    return await dialog.showSaveDialog(...args);
+})
+
+ipcMain.handle('show-open-dialog', async (event, ...args) => {
+    return await dialog.showOpenDialog(...args);
 })

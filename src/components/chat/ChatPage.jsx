@@ -5,7 +5,7 @@ import UserMessage from "./UserMessage";
 export default function ChatPage({
     chat, chat_history, updateTitle,
     sendMessage, pending_message, abort,
-    updateSystemInstruction
+    updateSystemInstruction, saveHistory
 }) {
 
     return (
@@ -15,6 +15,7 @@ export default function ChatPage({
                     current_title={chat.title} updateTitle={updateTitle} 
                     updateSystemInstruction={updateSystemInstruction}
                     current_instruction={chat['system-instruction']}
+                    saveHistory={saveHistory}
                 />
                 <Bubbles conversation={chat_history} pending_message={pending_message} />
                 <UserMessage
