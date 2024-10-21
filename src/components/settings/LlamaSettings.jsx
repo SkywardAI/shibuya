@@ -98,11 +98,11 @@ export default function LlamaSettings({ trigger, enabled, updateEnabled, openDow
                 placeholder={"Default model is Microsoft Phi-3"}
                 value={model_download_link} cb={setModelDownloadLink}
             />
-            {/* <TrueFalseComponent 
+            <TrueFalseComponent 
                 title={"Reset conversation when send new message"}
                 description={"Reset the conversation, only keeps the latest message and the system instruction, this is useful for many one-shot operations."}
                 value={reset_everytime} cb={setResetEveryTime}
-            /> */}
+            />
         </SettingSection>
     )
 }

@@ -40,7 +40,8 @@ export function getCompletionFunctions(platform = null) {
                 completions: window['node-llama-cpp'].chatCompletions, 
                 abort: window['node-llama-cpp'].abortCompletion, 
                 platform: 'Llama',
-                initClient: window['node-llama-cpp'].setClient
+                initClient: window['node-llama-cpp'].setClient,
+                formator: window['node-llama-cpp'].formator
             }
         case "Wllama":
             return {

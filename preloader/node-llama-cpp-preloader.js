@@ -40,9 +40,18 @@ async function loadModel(model_name = '') {
     })
 }
 
+
+
+/**
+ * @typedef Message
+ * @property {"user"|"assistant"|"system"} role Sender
+ * @property {String} content Message content
+ */
+
 /**
  * Set the session, basically reset the history and return a static string 'fake-client'
  * @param {String} client a fake client, everything using the same client and switch between clients just simply reset the chat history
+ * @param {Message[]} history the history to load
  * @returns {String}
  */
 async function setClient(client, history = []) {
@@ -66,20 +75,20 @@ async function setClient(client, history = []) {
  * @param {any} message The latest user message, either string or any can be converted to string. If is array in the format of {content:String}, it will retrieve the last content
  * @returns {String} the retrived message
  */
-function findMessageText(message) {
-    if(typeof message === "string") return message;
-    else if(typeof message === "object") {
-        if(Array.isArray(message)) {
-            while(message.length) {
-                message = message.pop();
-                if(typeof message === 'object' && message.role && message.role === 'user' && message.content) {
-                    return message.content;
-                }
-            }
-        }
-    }
-    return `${message}`
-}
+// function findMessageText(message) {
+//     if(typeof message === "string") return message;
+//     else if(typeof message === "object") {
+//         if(Array.isArray(message)) {
+//             while(message.length) {
+//                 message = message.pop();
+//                 if(typeof message === 'object' && message.role && message.role === 'user' && message.content) {
+//                     return message.content;
+//                 }
+//             }
+//         }
+//     }
+//     return `${message}`
+// }
 
 let model_settings = {};
 function updateModelSettings(settings) {
@@ -99,15 +108,12 @@ function updateModelSettings(settings) {
  * @returns {Promise<String>} the response text
  */
 async function chatCompletions(latest_message, cb=null) {
-    const {max_tokens, top_p, temperature, llama_reset_everytime} = model_settings;
+    const {max_tokens, top_p, temperature} = model_settings;
     if(!llama_session) {
         cb && cb('> **ERROR: MODEL NOT LOADED**', true);
         return '';
     }
-    latest_message = findMessageText(latest_message);
-    if(llama_reset_everytime) {
-        setClient(null, llama_session.getChatHistory().filter(({type})=>type === 'system'))
-    }
+    // latest_message = findMessageText(latest_message);}
 
 
     stop_signal = new AbortController();
@@ -210,11 +216,28 @@ function downloadModel(url, cb=null) {
     })
 }
 
+/**
+ * format messages, reset history if needed
+ * @param {Message[]} messages 
+ */
+function formator(messages) {
+    const user_messages = messages.filter(e=>e.role === 'user');
+    const system_messages = messages.filter(e=>e.role === 'system');
+
+    const {llama_reset_everytime} = model_settings;
+    if(llama_reset_everytime) {
+        setClient(null, system_messages)
+    }
+
+    return user_messages.pop().content;
+}
+
 module.exports = {
     loadModel,
     chatCompletions,
     abortCompletion,
     setClient,
     downloadModel,
-    updateModelSettings
+    updateModelSettings,
+    formator
 }
