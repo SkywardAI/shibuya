@@ -417,3 +417,43 @@ input[type="text"] {
 .button-container > .button-icon.highlight {
     color: dodgerblue;
 }
+
+dialog.export-format {
+    background-color: transparent;
+    border-radius: 10px;
+    padding: 0;
+    border: unset;
+}
+
+dialog.export-format > .export-format-main {
+    background-color: white;
+    border-radius: 10px;
+    padding: 20px 30px;
+}
+
+dialog.export-format > .export-format-main > .title {
+    font-size: 18px;
+    margin-bottom: 20px;
+}
+
+dialog.export-format > .export-format-main > .export-btn {
+    display: flex;
+    align-items: center;
+    height: 40px;
+    border: 2px solid lightgray;
+    margin-bottom: 15px;
+    border-radius: 10px;
+    transition-duration: .3s;
+}
+dialog.export-format > .export-format-main > .export-btn:hover {
+    border-color: gray;
+}
+
+dialog.export-format > .export-format-main > .export-btn > .icon {
+    margin-left: auto;
+    margin-right: 10px;
+}
+
+dialog.export-format > .export-format-main > .export-btn > .text {
+    margin-right: auto;
+}
