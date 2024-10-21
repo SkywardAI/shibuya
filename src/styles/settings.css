@@ -164,6 +164,12 @@
     margin-left: var(--elem-margin);
 }
 
+.setting-page > .setting-section > .component > select.main-part {
+    border-radius: 7px;
+    background-color: white;
+    padding: 0px 7px;
+}
+
 dialog:has(.download-protector) {
     border: none;
     border-radius: 15px;
