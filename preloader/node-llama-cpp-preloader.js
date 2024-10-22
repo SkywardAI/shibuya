@@ -1,5 +1,5 @@
 const { ipcRenderer } = require("electron");
-const { createWriteStream, existsSync, statSync, mkdirSync } = require("fs");
+const { createWriteStream, existsSync, statSync, mkdirSync, rmSync } = require("fs");
 const path = require("path");
 
 let llama, getLlama, LlamaChatSession, current_model;
@@ -217,6 +217,19 @@ function downloadModel(url, cb=null) {
 }
 
 /**
+ * Delete a model from disk
+ * @param {String} model_name the model name on disk
+ * @returns {Boolean}
+ */
+function deleteModel(model_name) {
+    const model = path.join(model_path, model_name);
+    if(existsSync(model)){
+        rmSync(model);
+    }
+    return true;
+}
+
+/**
  * format messages, reset history if needed
  * @param {Message[]} messages 
  */
@@ -239,5 +252,6 @@ module.exports = {
     setClient,
     downloadModel,
     updateModelSettings,
-    formator
+    formator,
+    deleteModel
 }
