@@ -25,7 +25,7 @@
     cursor: pointer;
 }
 .hidden { display: none; }
-input:focus { outline: none; }
+input:focus, dialog:focus { outline: none; }
 
 .main {
     width: 100%;
