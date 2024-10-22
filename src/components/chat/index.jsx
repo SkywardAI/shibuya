@@ -1,12 +1,11 @@
 import { useEffect, useRef, useState } from "react";
 import Tickets from "./Tickets";
-// import Conversation from "./Conversation";
 import useIDB from "../../utils/idb";
-import DeleteConfirm from "./DeleteConfirm";
 import ChatPage from "./ChatPage";
 import { getCompletionFunctions } from "../../utils/workers";
 import { getPlatformSettings } from "../../utils/general_settings";
 import { exportChatHistory } from "../../utils/chat-history-handler";
+import ConfirmationDialog from "../ConfirmationDialog";
 
 export default function Chat() {
 
@@ -184,13 +183,15 @@ export default function Chat() {
                 pending_message={pending_message} abort={session_setting.abort}
                 sendMessage={sendMessage} updateSystemInstruction={updateSystemInstruction}
             />
-            <DeleteConfirm 
-                showConfirm={show_delete_confirm} 
-                closeDialog={()=>toggleConfirm(false)}
-                deleteHistory={deleteHistory} 
-                resetRequestDelete={resetRequestDelete} 
-                conv_to_delete={conv_to_delete}
-            />
+            <ConfirmationDialog 
+                open_status={show_delete_confirm}
+                setOpenStatus={toggleConfirm}
+                callback={cb=>{
+                    cb ? deleteHistory() : resetRequestDelete();
+                }}
+            >
+                <div>Delete <strong>{ conv_to_delete && conv_to_delete.title }</strong>?</div>
+            </ConfirmationDialog>
         </div> :
         <></>
     )
