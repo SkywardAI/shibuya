@@ -28,7 +28,7 @@ One on each terminal, so they won't conflict with each other.
 ## Distributions
 There are some distribution files in releast page. Please download and run `Shibuya-vX.Y.Z.(AppImage|zip|exe)` according to your platform.  
 Currently there's no `Code Signing` in our distributions, so your defender might block you from using the application. Please allow install to use the distributions.  
-#### Mac (.zip)
+#### MacOS (.zip)
 Extract from dmg might say they are broked, it's because it's been blocked by the Gatekeeper. You can download the `.zip` file and extract `.app` from it, and run the `.app` file directly to give you chance bypassing the Gatekeeper.
 #### Windows (.exe)
 To install the application, Windows Defender SmartScreen might block you, please select **More info** and choose **Run anyway**.
