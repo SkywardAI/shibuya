@@ -1,12 +1,27 @@
-export default function DropdownComponent({ cb, value, title, description }) {
+import { useEffect } from "react";
+import { useState } from "react";
+
+export default function DropdownComponent({ cb, value, selected, title, description }) {
+
+    const [selected_option, setSelectedOption] = useState(selected || (value && value.length && value[0].value) || '');
+
+    useEffect(()=>{
+        selected && setSelectedOption(selected);
+    }, [selected])
+
     return (
         <div className="component">
             <div className="title">{title}</div>
             { description && <div className="description">{description}</div> }
             <select 
                 className="main-part" 
+                value={selected_option}
                 onClick={evt=>evt.preventDefault()}
-                onChange={evt=>cb && cb(evt.target.value)}
+                onChange={evt=>{
+                    const v = evt.target.value
+                    setSelectedOption(v);
+                    cb && cb(v);
+                }}
             >
                 { value.map((e, i)=>{
                     let title, value;
