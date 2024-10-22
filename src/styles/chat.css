@@ -78,28 +78,6 @@
     color: black;
 }
 
-.chat > dialog {
-    border: 2px solid black;
-    padding: 30px;
-    border-radius: 10px;
-    text-align: center;
-}
-.chat > dialog:focus {
-    outline: none;
-}
-
-.chat > dialog > .button {
-    border-bottom: 1px solid;
-    width: fit-content;
-    margin: auto;
-    margin-top: 7px;
-    padding: 0px 7px;
-    color: rgb(70, 70, 70);
-}
-.chat > dialog > .button:hover {
-    color: black;
-}
-
 .chat > .conversation-main {
     width: calc(100% - var(--tickets-width));
     position: absolute;

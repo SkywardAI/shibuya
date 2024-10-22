@@ -1,0 +1,20 @@
+.confirmation-dialog {
+    border: 2px solid black;
+    padding: 30px;
+    border-radius: 10px;
+    text-align: center;
+    max-width: 60%;
+}
+
+.confirmation-dialog > .button {
+    border-bottom: 1px solid;
+    width: fit-content;
+    margin: auto;
+    margin-top: 7px;
+    padding: 0px 7px;
+    color: rgb(70, 70, 70);
+}
+
+.confirmation-dialog > .button:hover {
+    color: black;
+}

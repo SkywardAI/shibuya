@@ -6,7 +6,7 @@ const {
     setClient, 
     downloadModel,
     updateModelSettings,
-    formator
+    formator, deleteModel
 } = require("./node-llama-cpp-preloader.js")
 
 const {
@@ -15,7 +15,8 @@ const {
 
 contextBridge.exposeInMainWorld('node-llama-cpp', {
     loadModel, chatCompletions, updateModelSettings,
-    abortCompletion, setClient, downloadModel, formator
+    abortCompletion, setClient, downloadModel, formator,
+    deleteModel
 })
 
 contextBridge.exposeInMainWorld('file-handler', {

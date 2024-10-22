@@ -170,6 +170,40 @@
     padding: 0px 7px;
 }
 
+.setting-page > .setting-section > .component > .main-part.button {
+    align-content: center;
+    text-align: center;
+    border-radius: 7px;
+    background-color: dodgerblue;
+    color: white;
+    user-select: none;
+}
+
+.setting-page > .setting-section > .component > .main-part.button:hover {
+    background-color: rgb(19 126 231);
+}
+
+.setting-page > .setting-section > .component > .main-part.button:not(.disabled):hover {
+    cursor: pointer;
+}
+
+.setting-page > .setting-section > .component > .main-part.button.disabled {
+    pointer-events: none;
+}
+
+.setting-page > .setting-section > .component > 
+.main-part.button.dangerous {
+    --main-color: red;
+    background-color: white;
+    color: var(--main-color);
+    border: 2px solid var(--main-color);
+}
+
+.setting-page > .setting-section > .component > 
+.main-part.button.dangerous:hover {
+    --main-color: crimson;
+}
+
 dialog:has(.download-protector) {
     border: none;
     border-radius: 15px;
