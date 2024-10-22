@@ -28,21 +28,25 @@ One on each terminal, so they won't conflict with each other.
 ## Distributions
 There are some distribution files in releast page. Please download and run `Shibuya-vX.Y.Z.(AppImage|zip|exe)` according to your platform.  
 Currently there's no `Code Signing` in our distributions, so your defender might block you from using the application. Please allow install to use the distributions.  
-#### MacOS (.zip)
+  
+_**Sensitive informations are stored only at your own machine. No one can see them.**_
+  
+#### MacOS X (.zip)
 Extract from dmg might say they are broked, it's because it's been blocked by the Gatekeeper. You can download the `.zip` file and extract `.app` from it, and run the `.app` file directly to give you chance bypassing the Gatekeeper.
 #### Windows (.exe)
 To install the application, Windows Defender SmartScreen might block you, please select **More info** and choose **Run anyway**.
 #### Linux (.AppImage)
 You can download and run the `.AppImage` file directly by double-clicking the binary on a linux desktop destribution.  
-If you are using terminal, you might want to give it execute permissions and disable sanbox to run it normally.
+If you couldn't run it by double-click it, open a terminal and run following command to give it execute permission:  
 ```sh
-# Assume we have the application <application-name>.AppImage
 chmod +x <application-name>.AppImage
-<application-name>.AppImage --no-sandbox
 ```
-
-> Sensitive informations are stored only at your own machine. No one can see them.
-
+If you want to continue run the app using terminal after applied execute permission, run following command:
+```sh
+/path/to/<application-name>.AppImage --no-sandbox
+```
+> Note: Remove the `--no-sandbox` flag might cause problem at startup, as chromium might not allow this to happen.
+> 
 ## References
 * [Wllama](https://github.com/ngxson/wllama)
 * [node-llama-cpp](https://github.com/withcatai/node-llama-cpp)
