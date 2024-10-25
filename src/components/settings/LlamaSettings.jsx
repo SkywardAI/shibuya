@@ -161,7 +161,7 @@ export default function LlamaSettings({ trigger, enabled, updateEnabled, openDow
             >
                 <div>
                     Are you sure you want to delete model<br/>
-                    <strong>{selected_model['model-name']}</strong>?
+                    <strong>{selected_model ? selected_model['model-name'] : ""}</strong>?
                 </div>
             </ConfirmationDialog>
         </SettingSection>
