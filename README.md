@@ -32,7 +32,7 @@ Currently there's no `Code Signing` in our distributions, so your defender might
 _**Sensitive informations are stored only at your own machine. No one can see them.**_
   
 #### MacOS X (.zip)
-Extract from dmg might say they are broked, it's because it's been blocked by the Gatekeeper. You can download the `.zip` file and extract `.app` from it, and run the `.app` file directly to give you chance bypassing the Gatekeeper.
+> Currently, MacOS X has been confirmed cannot use. We will look into this and update later.
 #### Windows (.exe)
 To install the application, Windows Defender SmartScreen might block you, please select **More info** and choose **Run anyway**.
 #### Linux (.AppImage)
