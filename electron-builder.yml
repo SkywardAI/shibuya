@@ -14,10 +14,10 @@ win:
     - nsis
   icon: build/icons/icon.ico  # Set Windows icon
 
-mac:
-  target:
-    - zip
-  icon: build/icons/icon.icns  # Set macOS icon
+# mac:
+#   target:
+#     - zip
+#   icon: build/icons/icon.icns  # Set macOS icon
 
 linux:
   target:
